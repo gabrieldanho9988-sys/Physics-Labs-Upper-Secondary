@@ -1,48 +1,22 @@
-# Physics Labs — Upper Secondary School (Gy25)
+# ML-labbar i fysik och matematik
 
-A collection of physics laboratory materials used in my teaching at Swedish upper secondary schools (gymnasium). During the 2018–2019 academic year, **multiple laboratory sessions** were conducted with my students at Örebro University's physics facilities, in formal collaboration with **Prof. Emeritus Dag Stranneby**.
+Laborationer för **Fysik 1** där eleverna gör egna mätningar och sedan låter datorn skatta parametrarna i en modell – samma idé som när en maskininlärningsmodell tränas. Fysikens begrepp (modell, noggrannhet, precision, mätosäkerhet) kopplas direkt till maskininlärningens (förlust, träning, tränings- och testdata).
 
-## My role
-**Gabriel Danho** — Licensed Upper Secondary Teacher (Physics & Mathematics) | M.Sc. Candidate in AI and Automation
+*English summary: Python/Google Colab labs for upper secondary physics (Physics 1) in which students measure, build a model and let the computer fit it – introducing the core ideas of machine learning through physics and mathematics. The material is in Swedish.*
 
-I was responsible for:
-- Bringing my upper secondary students to Örebro University's physics labs
-- Guiding and supervising the students throughout the lab sessions
-- Adapting the pedagogical delivery to upper secondary level
-- Adding visual illustrations of the lab equipment to the lab document for clearer student understanding
+| Labb | Fysik | Matematik och ML | Material |
+|---|---|---|---|
+| **ML-labb 1 – Hur exakt är π?** | omkrets och diameter; noggrannhet, precision och mätosäkerhet | modellen *C = k·d*, felsumma (loss), sökning efter minimum, minsta kvadratmetoden, residualer | [Notebook](ML-labb-1_Hur-exakt-ar-pi/ML-labb-1_Hur-exakt-ar-pi.ipynb) · [Elevinstruktion (PDF)](ML-labb-1_Hur-exakt-ar-pi/ML-labb-1_Elevinstruktion.pdf) · [Öppna i Colab](https://colab.research.google.com/github/gabrieldanho9988-sys/Physics-Labs-Upper-Secondary/blob/main/ML-labbar/ML-labb-1_Hur-exakt-ar-pi/ML-labb-1_Hur-exakt-ar-pi.ipynb) |
+| **ML-labb 3 – Tyngdkraft, fjäderkraft och parameterskattning** | fritt fall (*g*) och fjäderkonstant (*k*), mätt med rörelsesensor | linjär och kvadratisk anpassning, medelkvadratfel, förlustkurva, datarensning, tränings- och testdata | [Notebook](ML-labb-3_Tyngdkraft-och-fjaderkraft/ML-labb-3_Tyngdkraft-och-fjaderkraft.ipynb) · [Instruktion (PDF)](ML-labb-3_Tyngdkraft-och-fjaderkraft/ML-labb-3_Instruktion.pdf) · [Öppna i Colab](https://colab.research.google.com/github/gabrieldanho9988-sys/Physics-Labs-Upper-Secondary/blob/main/ML-labbar/ML-labb-3_Tyngdkraft-och-fjaderkraft/ML-labb-3_Tyngdkraft-och-fjaderkraft.ipynb) |
 
-## 🔌 Featured Lab — Resistors and Ohm's Law (Physics 1)
+Labbarna är ett urval ur en serie där fysikområden avslutas med en ML-labb.
 
-📄 **[Read the lab document (PDF)](./Lab_Resistors_Ohms_Law_Physics1.pdf)**
+## Så körs labbarna
+1. Klicka på **Öppna i Colab** och välj *Arkiv → Spara en kopia i Drive*.
+2. Kör cellerna uppifrån och ned. Eleverna ändrar bara värden där det står `ÄNDRA HÄR` eller i formulärfälten.
+3. Saknas sensor i labb 3 finns inbyggd exempeldata (kryssrutorna `anvand_exempeldata`).
 
-> **Lab author:** Prof. Emeritus Dag Stranneby (Örebro University, Department of Science and Technology) — Professor of Electronics Production and Director of Campus Alfred Nobel in Karlskoga.
->
-> **Visual illustrations of equipment** added by Gabriel Danho to support student comprehension.
+Koden använder Python med NumPy, pandas, Matplotlib och SciPy – inget behöver installeras i Colab. Båda notebooks är testkörda från början till slut.
 
-This is **one of several labs** conducted during the 2018–2019 collaboration. Other labs covered topics such as:
-- Mechanical forces
-- Electrical circuits and resistances
-- Interference and resonance
-- Boolean functions
-
-### Topics covered in this lab
-- Resistance measurement with multimeter
-- Series and parallel resistor configurations
-- Verification of Ohm's Law (V = IR)
-- Components that do *not* obey Ohm's Law (LEDs)
-- Mathematical modeling: R = ρL/A
-
-### Pedagogical approach
-The lab bridges mathematical modeling, simulation, and concrete experimental verification — designed to help upper secondary students connect theory with hands-on practice.
-
-## 🎯 Relevance to Gy25 Curriculum
-This material directly supports the new Gy25 curriculum, particularly:
-- **FYSK** (Fysik) and **FYSF** (Fysik – fördjupning)
-- **NATS** (Naturvetenskaplig specialisering)
-- **LLEG_NATA_A** and **LLEG_NATA_B** (Naturvetenskaplig spets A och B)
-
-## 📚 Coming soon
-Additional laboratory materials from my teaching practice will be added to this repository.
-
-## 📜 License & Attribution
-The lab content is the work of Prof. Emeritus Dag Stranneby. Shared here with attribution for educational and portfolio purposes.
+## Upphovsperson
+Gabriel Danho – legitimerad gymnasielärare i fysik, matematik och AI.
