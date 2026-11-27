@@ -1,0 +1,27 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{labstyle}
+\begin{document}
+\begin{tikzpicture}[lab]
+  \pic at (0,0) {breadboard={cols=18, half}};
+  % connected strips in use
+  \bbstrip{5}{t}\bbstrip{11}{t}
+  \bbrail{1}{5}{P}\bbrail{11}{11}{N}
+  % R_A and R_B (2 x 470 ohm) both span columns 5 -> 11: parallel connection
+  \bbres{5}{11}{b}{band-yellow,band-violet,band-brown,band-gold}
+  \bbres{5}{11}{d}{band-yellow,band-violet,band-brown,band-gold}
+  % jumper wires
+  \draw[jumper=leadred] (\bbx{5},\bby{P}) -- (\bbx{5},\bby{a});
+  \bbpin{5}{P}\bbpin{5}{a}
+  \draw[jumper=leadblack] (\bbx{11},\bby{e}) -- (\bbx{12}+0.15,\bby{e}) -- (\bbx{12}+0.15,\bby{N}) -- (\bbx{11},\bby{N});
+  \bbpin{11}{e}\bbpin{11}{N}
+  % power supply
+  \pic[scale=0.60, transform shape] (psu) at (-2.15,-1.85) {psu={volt=9.00, amp=0.04}};
+  \draw[cable=leadred] (psu-plus) .. controls +(0,0.9) and +(-0.9,0) .. (\bbx{1},\bby{P});
+  \draw[cable=leadblack] (psu-minus) .. controls +(0.1,0.65) and +(-0.7,0) .. (\bbx{1},\bby{N});
+  \bbpin{1}{P}\bbpin{1}{N}
+  % labels
+  \node[tag, font=\fsSemi\footnotesize, text=navy, fill=bbboard, inner sep=0.5pt] at ({0.5*(\bbx{5}+\bbx{11})},{\bby{b}+0.26}) {\(R_A\)};
+  \node[tag, font=\fsSemi\footnotesize, text=navy, fill=bbboard, inner sep=0.5pt] at ({0.5*(\bbx{5}+\bbx{11})},{\bby{d}+0.26}) {\(R_B\)};
+  \node[note, anchor=north, align=center] at (-2.15,-2.70) {Spänningsaggregat\\\qty{9}{\volt}};
+\end{tikzpicture}
+\end{document}

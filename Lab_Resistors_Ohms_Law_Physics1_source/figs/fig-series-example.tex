@@ -1,0 +1,20 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{labstyle}
+\begin{document}
+\begin{tikzpicture}[lab, line width=0.9pt]
+  % source, ammeter, two equal resistors; a voltmeter across each resistor
+  \draw (0,0) to[battery1, invert, l={\qty{9.0}{\volt}}] (0,2.4) -- (2.3,2.4)
+        to[R, l_={\(R_1 = \qty{10.0}{\ohm}\)}] (4.2,2.4) -- (5.3,2.4)
+        to[R, l_={\(R_2 = \qty{10.0}{\ohm}\)}] (7.2,2.4) -- (8.0,2.4) -- (8.0,0) -- (0,0);
+  \node[font=\fsSemi\small, text=leadred] at (0.32,1.62) {+};
+  \node[font=\fsSemi\small] at (0.32,0.80) {\textminus};
+  \node[meter] (A) at (1.2,2.4) {A};
+  \node[reading, below=5pt of A] {0,45 A};
+  \foreach \xa/\xb/\n in {2.3/4.2/1, 5.3/7.2/2} {
+    \draw (\xa,2.4) node[jdot]{} -- (\xa,3.55) -- (\xb,3.55) -- (\xb,2.4) node[jdot]{};
+    \node[meter] (V\n) at ({0.5*(\xa+\xb)},3.55) {V};
+    \node[reading, above=5pt of V\n] {4,50 V};
+  }
+  \draw[->, accent, line width=1.1pt] (2.55,0.35) -- (5.45,0.35) node[midway, above, text=accentdark]{\(I = \qty{0.45}{\ampere}\) i hela kretsen};
+\end{tikzpicture}
+\end{document}

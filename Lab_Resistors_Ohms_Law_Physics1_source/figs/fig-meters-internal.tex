@@ -1,0 +1,41 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{labstyle}
+\begin{document}
+\begin{tikzpicture}[lab, line width=0.9pt]
+  % ---------------- (a) ammeter: galvanometer with a small shunt in parallel
+  \begin{scope}
+    \fill[softblue, rounded corners=2mm] (1.05,-0.95) rectangle (4.75,2.05);
+    \draw[accent, dashed, line width=0.8pt, rounded corners=2mm] (1.05,-0.95) rectangle (4.75,2.05);
+    \node[anchor=north west, font=\fsSemi\small, text=accentdark] at (1.12,2.0) {Amperemeter};
+    \draw (-0.2,0) -- (1.35,0);
+    \draw (1.35,0) to[R, l_=\(R_{\mathrm{sh}}\)] (4.45,0);
+    \draw (1.35,0) -- (1.35,1.1) -- (4.45,1.1) -- (4.45,0);
+    \node[meter] at (2.9,1.1) {G};
+    \draw (4.45,0) -- (6.0,0);
+    \node[jdot] at (1.35,0) {}; \node[jdot] at (4.45,0) {};
+    \node[tag, below left] at (1.35,0) {\(a\)};
+    \node[tag, below right] at (4.45,0) {\(b\)};
+    \draw[->, accent, line width=1.1pt] (-0.1,0.28) -- (0.75,0.28) node[midway, above, text=accentdark]{\(I\)};
+    \draw[->, accent, line width=1.1pt] (5.05,0.28) -- (5.9,0.28) node[midway, above, text=accentdark]{\(I\)};
+    \node[font=\fsSemi, text=navy] at (-0.15,1.85) {a)};
+  \end{scope}
+  % ---------------- (b) voltmeter: galvanometer with a large series resistor
+  \begin{scope}[xshift=8.0cm]
+    \fill[softpurple, rounded corners=2mm] (0.85,0.62) rectangle (4.65,2.05);
+    \draw[purple, dashed, line width=0.8pt, rounded corners=2mm] (0.85,0.62) rectangle (4.65,2.05);
+    \node[anchor=north east, font=\fsSemi\small, text=purple] at (4.58,2.0) {Voltmeter};
+    \draw (-0.2,0) -- (1.2,0);
+    \draw (1.2,0) to[generic, l_=Komponent] (4.3,0);
+    \draw (4.3,0) -- (5.8,0);
+    \draw (1.2,0) -- (1.2,1.12) to[R, l=\(R_{\mathrm{s}}\), label distance=1pt] (2.85,1.12) -- (3.15,1.12);
+    \draw (3.15,1.12) -- (4.3,1.12) -- (4.3,0);
+    \node[meter] at (3.55,1.12) {G};
+    \node[jdot] at (1.2,0) {}; \node[jdot] at (4.3,0) {};
+    \node[tag, below left] at (1.2,0) {\(V_a\)};
+    \node[tag, below right] at (4.3,0) {\(V_b\)};
+    \draw[->, accent, line width=1.1pt] (-0.1,0.28) -- (0.75,0.28) node[midway, above, text=accentdark]{\(I\)};
+    \draw[->, accent, line width=1.1pt] (4.85,0.28) -- (5.7,0.28) node[midway, above, text=accentdark]{\(I\)};
+    \node[font=\fsSemi, text=navy] at (-0.15,1.85) {b)};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,23 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{labstyle}
+\begin{document}
+\begin{tikzpicture}[lab]
+  % battery (+ at the top) and lamp; one voltmeter across the battery, one across the lamp
+  \pic[rotate=90] (bat) at (2.9,1.65) {cell};
+  \pic (lamp) at (7.3,1.08) {lampholder};
+  \draw[cwire] (bat-plus) -- (2.9,4.1) -- (8.4,4.1) -- (8.4,1.06) -- (lamp-r);
+  \draw[cwire] (lamp-l) -- (6.3,1.06) -- (6.3,-0.55) -- (2.9,-0.55) -- (bat-minus);
+  % voltmeter across the battery
+  \pic[scale=0.40, transform shape] (vb) at (0.9,1.95) {multimeter={display=1.50, unit=V, dial=90}};
+  \draw[cable=leadred, rounded corners=6pt] (vb-jackV) -- (1.5,0.30) -- (2.12,0.30) -- (2.12,3.45) -- (2.9,3.45);
+  \draw[cable=leadblack, rounded corners=6pt] (vb-jackCOM) -- (1.1,0.0) -- (2.9,0.0);
+  % voltmeter across the lamp
+  \pic[scale=0.40, transform shape] (vl) at (4.75,1.95) {multimeter={display=1.50, unit=V, dial=90}};
+  \draw[cable=leadred, rounded corners=6pt] (vl-jackV) -- (5.35,0.30) -- (5.92,0.30) -- (5.92,4.1);
+  \draw[cable=leadblack, rounded corners=6pt] (vl-jackCOM) -- (4.95,0.0) -- (6.3,0.0);
+  \foreach \p in {(2.9,3.45), (2.9,0.0), (5.92,4.1), (6.3,0.0)} \fill[pinmetal!70!black] \p circle (0.075);
+  % labels
+  \node[note, anchor=north, align=center] at (0.9,-0.72) {över batteriet};
+  \node[note, anchor=north, align=center] at (4.75,-0.72) {över lampan};
+\end{tikzpicture}
+\end{document}

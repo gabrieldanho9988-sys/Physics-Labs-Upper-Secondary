@@ -1,0 +1,23 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{labstyle}
+\begin{document}
+\begin{tikzpicture}[lab]
+  % multimeter in resistance mode
+  \pic[scale=0.60, transform shape] (dmm) at (0,0) {multimeter={display=218.6, unit=Ω, dial=30, mode={}}};
+  % resistor R1 = 220 ohm
+  \pic[scale=1.30, transform shape] (r) at (5.35,-0.55) {resistor={bands={band-red,band-red,band-brown,band-gold}, lead=0.80}};
+  % probes touching the leads
+  \pic[rotate=135, scale=0.85, transform shape] (pb) at (3.62,-0.55) {probe={color=leadblack}};
+  \pic[rotate=225, scale=0.85, transform shape] (pr) at (7.08,-0.55) {probe};
+  % leads from the jacks
+  \draw[cable=leadblack] (dmm-jackCOM) .. controls +(0,-0.75) and +(-0.55,-0.45) .. (pb-cable);
+  \draw[cable=leadred] (dmm-jackV) .. controls +(0.1,-1.35) and +(0.65,-0.75) .. (pr-cable);
+  % labels
+  \node[font=\fsSemi\small, text=navy, anchor=south] at (5.35,-0.12) {\(R_1\) = \qty{220}{\ohm}};
+  \node[note, anchor=north, align=center] at (5.35,-0.98) {röd -- röd -- brun -- guld};
+  \node[calldot] at (1.03,1.45) {};
+  \draw[callout] (1.03,1.45) -- (2.45,1.45) node[anchor=west, tag]{Display: uppmätt resistans};
+  \node[calldot] at (0.98,-0.09) {};
+  \draw[callout] (0.98,-0.09) -- (1.85,0.62) -- (2.45,0.62) node[anchor=west, tag]{Vridomkopplaren i läge Ω};
+\end{tikzpicture}
+\end{document}

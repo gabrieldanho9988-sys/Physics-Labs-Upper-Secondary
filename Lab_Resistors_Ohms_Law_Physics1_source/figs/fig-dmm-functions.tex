@@ -1,0 +1,47 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{labstyle}
+\begin{document}
+\newsavebox\diodebox
+\sbox\diodebox{\tikz[baseline=-0.55ex, line width=0.8pt]{\fill (0,0.085) -- (0,-0.085) -- (0.15,0) -- cycle; \draw (0.16,0.095) -- (0.16,-0.095);}}
+\begin{tikzpicture}[lab]
+  \pic (m) at (0,0) {multimeter={display=1.500, unit=V, dial=90}};
+  \tikzset{
+    fn/.style={tag, font=\footnotesize, inner sep=1.5pt},
+    fnl/.style={fn, anchor=east},
+    fnr/.style={fn, anchor=west},
+  }
+  % ---------- left column
+  \foreach \px/\py/\ly/\txt in {
+      -1.66/2.42/2.42/{\fsSemi Display\textnormal{\,–\,visar mätvärde och enhet}},
+      -1.84/1.04/1.30/{\fsSemi HOLD\textnormal{\,–\,låser mätvärdet}},
+      -1.02/0.44/0.62/{\fsSemi V\acsym\textnormal{\,–\,växelspänning (AC)}},
+      -1.62/-0.14/-0.10/{\fsSemi OFF\textnormal{\,–\,avstängd}},
+      -1.90/-0.95/-0.82/{\fsSemi A\dcsym\textnormal{\,–\,likström (DC)}},
+      -1.66/-1.76/-1.54/{\fsSemi A\acsym\textnormal{\,–\,växelström (AC)}},
+      -0.62/-1.70/-2.26/{\fsSemi Vridomkopplare\textnormal{\,–\,välj storhet}}} {
+    \node[calldot] at (\px,\py) {};
+    \draw[callout] (\px,\py) -- (-2.95,\ly) -- (-3.15,\ly) node[fnl]{\txt};
+  }
+  % ---------- right column
+  \foreach \px/\py/\ly/\txt in {
+      1.84/1.04/1.30/{\fsSemi RANGE \textnormal{/} SELECT\textnormal{\,–\,mätområde / funktion}},
+      0.26/0.62/0.62/{\fsSemi V\dcsym\textnormal{\,–\,likspänning (DC)}},
+      1.06/0.44/0.10/{\fsSemi mV\textnormal{\,–\,små spänningar}},
+      1.62/-0.15/-0.42/{\fsSemi Ω\textnormal{\,–\,resistans}},
+      1.96/-0.95/-0.95/{\fsSemi )))\textnormal{\,–\,genomgångstest (pip)}},
+      1.62/-1.76/-1.48/{\usebox\diodebox\textnormal{\,–\,diodtest}}} {
+    \node[calldot] at (\px,\py) {};
+    \draw[callout] (\px,\py) -- (2.95,\ly) -- (3.15,\ly) node[fnr]{\txt};
+  }
+  % ---------- input jacks
+  \foreach \jx/\lx/\hy/\txt in {
+      -1.5/-4.9/-4.20/{\fsSemi 10A\\\textnormal{stor ström (max 10\,A)}\\\textnormal{\color{leadred}röd sladd}},
+      -0.5/-1.75/-4.50/{\fsSemi mA\,µA\\\textnormal{liten ström}\\\textnormal{\color{leadred}röd sladd}},
+       0.5/1.75/-4.50/{\fsSemi COM\\\textnormal{gemensam anslutning}\\\textnormal{svart sladd}},
+       1.5/4.9/-4.20/{\fsSemi V\,Ω\\\textnormal{spänning och resistans}\\\textnormal{\color{leadred}röd sladd}}} {
+    \node[calldot] at (\jx,-3.35) {};
+    \draw[callout] (\jx,-3.35) -- (\jx,\hy) -- (\lx,\hy) -- (\lx,-4.72);
+    \node[fn, anchor=north, align=center] at (\lx,-4.72) {\txt};
+  }
+\end{tikzpicture}
+\end{document}
