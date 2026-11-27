@@ -1,0 +1,76 @@
+\documentclass[border=0pt]{standalone}
+\usepackage{labstyle}
+\begin{document}
+\begin{tikzpicture}[lab]
+  \def\cw{5.44}\def\ch{4.42}\def\gx{0.34}\def\gy{0.28}\def\ih{2.12}
+  \pgfmathsetmacro\tw{\cw-0.70}
+  \newcommand\card[5]{%
+    \pgfmathsetmacro\cx{#1*(\cw+\gx)}\pgfmathsetmacro\cy{-#2*(\ch+\gy)}%
+    \fill[soft, rounded corners=3mm] (\cx,\cy) rectangle ++(\cw,-\ch);
+    \draw[rule, line width=0.5pt] (\cx+0.35,\cy-\ih-0.02) -- ++(\cw-0.7,0);
+    \node[anchor=north west, text width=\tw cm, align=left, inner sep=0pt] at (\cx+0.35,\cy-\ih-0.20)
+      {{\fsSemi\color{navy}#3}\par\vspace{0.5pt}%
+       {\scriptsize\itshape\color{muted}eng.\ #4}\par\vspace{3pt}%
+       {\footnotesize\color{ink}\linespread{1.08}\selectfont\hyphenpenalty=10000\exhyphenpenalty=10000 #5\par}};
+    \coordinate (ill) at (\cx+0.5*\cw,\cy-0.5*\ih-0.05);
+  }
+
+  % 1 -- power supply
+  \card{0}{0}{Spänningsaggregat (DC)}{DC power supply}{Likspänningskälla. Ställ in \qty{9}{\volt} för serie- och parallellkopplingen.}
+  \pic[scale=0.58, transform shape] at (ill) {psu={volt=9.00, amp=0.00}};
+
+  % 2 -- multimeter
+  \card{1}{0}{Digital multimeter}{multimeter}{Mäter spänning (V), ström (A) och resistans (Ω).}
+  \pic[scale=0.228, transform shape] (dmm) at ($(ill)+(-0.55,0)$) {multimeter={display=0.000, unit=V, dial=90, annunciators=false}};
+  \pic[rotate=-28, scale=0.58, transform shape] (pr) at ($(ill)+(1.05,-0.86)$) {probe};
+  \pic[rotate=-12, scale=0.58, transform shape] (pb) at ($(ill)+(1.55,-0.86)$) {probe={color=leadblack}};
+  \draw[cable=leadred] (dmm-jackV) .. controls +(0,-0.55) and +(-0.25,0.45) .. (pr-cable);
+  \draw[cable=leadblack] (dmm-jackCOM) .. controls +(0,-0.75) and +(-0.15,0.55) .. (pb-cable);
+
+  % 3 -- test leads
+  \card{2}{0}{Labbsladdar}{test leads}{Röd sladd till plus (+), svart sladd till minus (\textminus) eller COM.}
+  \begin{scope}[shift={(ill)}]
+    \draw[cable=leadred] (-1.45,0.45) .. controls (-0.3,0.95) and (0.2,-0.35) .. (1.3,0.25);
+    \pic[rotate=165] at (-1.45,0.45) {plug};
+    \pic[rotate=25] at (1.3,0.25) {plug};
+    \draw[cable=leadblack] (-1.45,-0.25) .. controls (-0.4,0.25) and (0.3,-0.95) .. (1.3,-0.55);
+    \pic[rotate=160] at (-1.45,-0.25) {plug={color=leadblack}};
+    \pic[rotate=20] at (1.3,-0.55) {plug={color=leadblack}};
+  \end{scope}
+
+  % 4 -- breadboard
+  \card{0}{1}{Kopplingsdäck}{breadboard}{Hålen i varje kolumn (a–e, f–j) är ihopkopplade, liksom hålen längs skenorna.}
+  \begin{scope}[shift={($(ill)+(-1.13,0.84)$)}, scale=0.58, transform shape]
+    \pic at (0,0) {breadboard={cols=10, half}};
+    \bbstrip{4}{t}
+    \bbrail{1}{5}{P}
+  \end{scope}
+
+  % 5 -- resistors
+  \card{1}{1}{Resistorer}{resistors}{1~st \qty{220}{\ohm}, 1~st \qty{330}{\ohm} och 2~st \qty{470}{\ohm}. Ohmska: följer Ohms lag.}
+  \begin{scope}[shift={(ill)}]
+    \foreach \y/\bands/\val in {0.72/{band-red,band-red,band-brown,band-gold}/220,
+                                0.24/{band-orange,band-orange,band-brown,band-gold}/330,
+                               -0.24/{band-yellow,band-violet,band-brown,band-gold}/470,
+                               -0.72/{band-yellow,band-violet,band-brown,band-gold}/470} {
+      \pic[scale=0.74, transform shape] at (-0.55,\y) {resistor={bands=\bands, lead=0.42}};
+      \node[anchor=west, font=\fsSemiTab\footnotesize, text=ink] at (0.55,\y) {\qty{\val}{\ohm}};
+    }
+  \end{scope}
+
+  % 6 -- LED
+  \card{2}{1}{Lysdiod, röd}{LED}{Ca \qty{2}{\volt} och högst \qty{20}{\milli\ampere}. Icke-ohmsk: följer \emph{inte} Ohms lag.}
+  \begin{scope}[shift={(ill)}]
+    \pic[scale=0.95, transform shape] (led) at (-1.55,0.22) {led={icon, legs=1.10, cathodeshort=0.32}};
+    \draw[callout] (led-anode) ++(0,0.05) -- ++(-0.35,0) node[anchor=east, tag, font=\fsSemi\footnotesize, text=leadred, inner sep=1pt] {+};
+    \draw[callout] (led-cathode) ++(0,0.05) -- ++(0.32,0) node[anchor=west, tag, font=\fsSemi\footnotesize, inner sep=1pt] {\textminus};
+    \node[anchor=west, font=\footnotesize, text=ink, align=left, inner sep=0] at (-0.15,0.62)
+      {\fsSemi Anod (+)\\[-1pt]\footnotesize långt ben};
+    \node[anchor=west, font=\footnotesize, text=ink, align=left, inner sep=0] at (-0.15,-0.18)
+      {\fsSemi Katod (\textminus)\\[-1pt]\footnotesize kort ben};
+    \draw[line width=0.9pt] (1.45,0.05) to[full led, l=] (2.35,0.05);
+    \node[font=\fsSemi\footnotesize, text=leadred] at (1.45,-0.32) {+};
+    \node[font=\fsSemi\footnotesize] at (2.35,-0.32) {\textminus};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

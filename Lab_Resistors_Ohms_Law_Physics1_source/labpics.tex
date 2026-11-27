@@ -1,0 +1,352 @@
+% Drawing library: original vector illustrations of the lab equipment.
+% All pics are drawn at "scale 1" in cm; place them with scale=..., transform shape.
+
+% ---------------------------------------------------------------- resistor (axial, 4 bands)
+\pgfkeys{/lab/res/.cd,
+  bands/.store in=\lab@res@bands, bands={band-red,band-red,band-brown,band-gold},
+  lead/.store in=\lab@res@lead, lead=0.6,
+  leadwidth/.store in=\lab@res@lw, leadwidth=0.9pt}
+\def\lab@resoutline{(-0.75,0) .. controls (-0.75,0.25) and (-0.70,0.26) .. (-0.62,0.26) -- (-0.53,0.26)
+  .. controls (-0.46,0.26) and (-0.45,0.20) .. (-0.38,0.20) -- (0.38,0.20)
+  .. controls (0.45,0.20) and (0.46,0.26) .. (0.53,0.26) -- (0.62,0.26)
+  .. controls (0.70,0.26) and (0.75,0.25) .. (0.75,0)
+  .. controls (0.75,-0.25) and (0.70,-0.26) .. (0.62,-0.26) -- (0.53,-0.26)
+  .. controls (0.46,-0.26) and (0.45,-0.20) .. (0.38,-0.20) -- (-0.38,-0.20)
+  .. controls (-0.45,-0.20) and (-0.46,-0.26) .. (-0.53,-0.26) -- (-0.62,-0.26)
+  .. controls (-0.70,-0.26) and (-0.75,-0.25) .. (-0.75,0) -- cycle}
+\tikzset{pics/resistor/.style={code={%
+  \pgfkeys{/lab/res/.cd,#1}%
+  \draw[lab lead, line width=\lab@res@lw] (-0.75-\lab@res@lead,0) -- (0.75+\lab@res@lead,0);
+  \coordinate (-l) at (-0.75-\lab@res@lead,0);
+  \coordinate (-r) at (0.75+\lab@res@lead,0);
+  \shade[top color=resbodyhi, bottom color=resbodylo, middle color=resbody] \lab@resoutline;
+  \begin{scope}
+    \clip \lab@resoutline;
+    \edef\lab@res@list{\lab@res@bands}%
+    \foreach \bc [count=\bi] in \lab@res@list {
+      \pgfmathsetmacro\bx{\bi==4 ? 0.50 : -0.56+0.215*(\bi-1)}
+      \fill[\bc] (\bx-0.058,-0.3) rectangle (\bx+0.058,0.3);
+    }
+    \fill[white, opacity=0.38] (-0.74,0.07) rectangle (0.74,0.16);
+    \fill[black, opacity=0.12] (-0.74,-0.26) rectangle (0.74,-0.13);
+  \end{scope}
+  \draw[resedge, line width=0.35pt] \lab@resoutline;
+}}}
+
+% ---------------------------------------------------------------- LED, side view
+% origin = underside of the flange; legs end at (-0.15,-legs) [anode, long, bent] and (0.15,-legs) [cathode]
+\newif\iflab@led@rays\newif\iflab@led@icon
+\pgfkeys{/lab/led/.cd,
+  color/.store in=\lab@led@color, color=ledred,
+  legs/.store in=\lab@led@legs, legs=1.4,
+  cathodeshort/.store in=\lab@led@cshort, cathodeshort=0.25,
+  rays/.is if=lab@led@rays, rays=false,
+  icon/.is if=lab@led@icon, icon=false,
+  leadwidth/.store in=\lab@led@lw, leadwidth=0.9pt}
+\tikzset{pics/led/.style={code={%
+  \pgfkeys{/lab/led/.cd,#1}%
+  \iflab@led@rays
+    \foreach \a in {25,60,90,120,155}
+      \draw[\lab@led@color!70, line width=1.1pt] ($(0,0.66)+(\a:0.47)$) -- ($(0,0.66)+(\a:0.66)$);
+  \fi
+  \iflab@led@icon
+    \draw[lab lead, line width=\lab@led@lw] (-0.11,0) -- (-0.11,-\lab@led@legs);
+    \draw[lab lead, line width=\lab@led@lw] (0.11,0) -- (0.11,-\lab@led@legs+\lab@led@cshort);
+    \coordinate (-anode) at (-0.11,-\lab@led@legs);
+    \coordinate (-cathode) at (0.11,-\lab@led@legs+\lab@led@cshort);
+  \else
+    \draw[lab lead, line width=\lab@led@lw] (-0.11,0) -- (-0.11,-0.28) -- (-0.15,-0.40) -- (-0.15,-\lab@led@legs);
+    \draw[lab lead, line width=\lab@led@lw] (0.11,0) -- (0.11,-\lab@led@legs+\lab@led@cshort) -- (0.15,-\lab@led@legs+\lab@led@cshort-0.1) -- (0.15,-\lab@led@legs);
+    \coordinate (-anode) at (-0.15,-\lab@led@legs);
+    \coordinate (-cathode) at (0.15,-\lab@led@legs);
+  \fi
+  \fill[\lab@led@color!75!black] (-0.37,0) rectangle (0.31,0.13);
+  \fill[\lab@led@color, opacity=0.9] (-0.30,0.13) -- (-0.30,0.66) arc[start angle=180, end angle=0, radius=0.30] -- (0.30,0.13) -- cycle;
+  \fill[black, opacity=0.22] (-0.14,0.13) rectangle (-0.08,0.50);
+  \fill[black, opacity=0.30] (0.05,0.13) -- (0.05,0.44) -- (0.19,0.52) -- (0.19,0.13) -- cycle;
+  \fill[white, opacity=0.55] (-0.17,0.68) ellipse[x radius=0.055, y radius=0.15];
+  \draw[\lab@led@color!60!black, line width=0.35pt] (-0.30,0.13) -- (-0.30,0.66) arc[start angle=180, end angle=0, radius=0.30] -- (0.30,0.13);
+}}}
+
+% ---------------------------------------------------------------- battery cell (AA), horizontal, + on the right
+\pgfkeys{/lab/cell/.cd, label/.store in=\lab@cell@label, label={1,5\,V}}
+\tikzset{pics/cell/.style={code={%
+  \pgfkeys{/lab/cell/.cd,#1}%
+  \fill[cellcap, rounded corners=0.04cm] (0.92,-0.15) rectangle (1.10,0.15);
+  \fill[cellbody, rounded corners=0.07cm] (-1.05,-0.42) rectangle (0.97,0.42);
+  \fill[cellband] (0.38,-0.42) rectangle (0.97,0.42);
+  \fill[cellcap] (-1.05,-0.39) rectangle (-0.99,0.39);
+  \fill[white, opacity=0.16] (-0.99,0.17) rectangle (0.97,0.30);
+  \fill[black, opacity=0.18] (-0.99,-0.42) rectangle (0.97,-0.27);
+  \node[font=\fsSemi\small, text=white, inner sep=0] at (-0.32,0) {\lab@cell@label};
+  \node[font=\fsBold\small, text=white, inner sep=0] at (0.67,0.01) {+};
+  \coordinate (-plus) at (1.10,0);
+  \coordinate (-minus) at (-1.05,0);
+}}}
+
+% ---------------------------------------------------------------- light bulb, base at the bottom
+\newif\iflab@bulb@lit
+\pgfkeys{/lab/bulb/.cd, lit/.is if=lab@bulb@lit, lit=true}
+\def\lab@bulbglass{(-0.27,0.62) .. controls (-0.27,0.82) and (-0.62,0.95) .. (-0.62,1.30)
+  arc[start angle=180, end angle=0, radius=0.62] .. controls (0.62,0.95) and (0.27,0.82) .. (0.27,0.62) -- cycle}
+\tikzset{pics/bulb/.style={code={%
+  \pgfkeys{/lab/bulb/.cd,#1}%
+  \iflab@bulb@lit
+    \shade[inner color=glow, outer color=white] (0,1.30) circle (1.10);
+  \fi
+  \fill[glass] \lab@bulbglass;
+  \iflab@bulb@lit \fill[glow, opacity=0.55] (0,1.28) circle (0.40); \fi
+  \draw[leadmetal, line width=0.7pt] (-0.10,0.62) -- (-0.20,1.22);
+  \draw[leadmetal, line width=0.7pt] (0.10,0.62) -- (0.20,1.22);
+  \draw[filament, line width=0.9pt] (-0.20,1.22) -- (-0.15,1.33) -- (-0.10,1.22) -- (-0.05,1.33) -- (0,1.22) -- (0.05,1.33) -- (0.10,1.22) -- (0.15,1.33) -- (0.20,1.22);
+  \draw[glassedge, line width=0.6pt] \lab@bulbglass;
+  \fill[white, opacity=0.6] (-0.36,1.48) arc[start angle=160, end angle=110, radius=0.42] -- ++(0.02,-0.07) arc[start angle=110, end angle=160, radius=0.35] -- cycle;
+  \shade[left color=basemetal!70!black, right color=basemetal!70!black, middle color=basemetal!35] (-0.27,0.14) rectangle (0.27,0.62);
+  \foreach \y in {0.22,0.33,0.44}
+    \draw[basemetal!45!black, line width=0.5pt] (-0.27,\y) -- (0.27,\y+0.06);
+  \fill[jackblack] (-0.20,0.14) -- (0.20,0.14) -- (0.12,0.02) -- (-0.12,0.02) -- cycle;
+  \fill[basemetal!60!black] (-0.07,0.02) rectangle (0.07,-0.03);
+  \coordinate (-tip) at (0,-0.03);
+  \coordinate (-side) at (0.27,0.40);
+  \coordinate (-lside) at (-0.27,0.40);
+}}}
+
+% ---------------------------------------------------------------- test probe, tip at origin, handle along +y
+\pgfkeys{/lab/probe/.cd, color/.store in=\lab@probe@color, color=leadred}
+\tikzset{pics/probe/.style={code={%
+  \pgfkeys{/lab/probe/.cd,#1}%
+  \draw[pinmetal!80!black, line width=1.3pt, line cap=round] (0,0.02) -- (0,0.46);
+  \fill[\lab@probe@color!85!black, rounded corners=0.03cm] (-0.14,0.44) rectangle (0.14,0.56);
+  \fill[\lab@probe@color, rounded corners=0.07cm] (-0.095,0.53) rectangle (0.095,1.58);
+  \fill[white, opacity=0.28] (-0.06,0.60) rectangle (-0.025,1.50);
+  \fill[\lab@probe@color!70!black, rounded corners=0.02cm] (-0.06,1.56) rectangle (0.06,1.74);
+  \coordinate (-cable) at (0,1.72);
+  \coordinate (-tip) at (0,0);
+}}}
+
+% ---------------------------------------------------------------- digital multimeter (generic design)
+\newif\iflab@mm@annun
+\pgfkeys{/lab/mm/.cd,
+  display/.store in=\lab@mm@display, display=0.000,
+  cells/.store in=\lab@mm@cells, cells=4,
+  unit/.store in=\lab@mm@unit, unit=V,
+  unitsize/.store in=\lab@mm@unitsize, unitsize=13,
+  mode/.store in=\lab@mm@mode, mode=DC,
+  dial/.store in=\lab@mm@dial, dial=90,
+  annunciators/.is if=lab@mm@annun, annunciators=true}
+\tikzset{
+  mm label/.style={font=\fsSemi\fontsize{6.6}{7}\selectfont, text=mmtext, inner sep=0pt},
+  mm tiny/.style={font=\fsSemi\fontsize{4.8}{5}\selectfont, inner sep=0pt},
+  pics/multimeter/.style={code={%
+  \pgfkeys{/lab/mm/.cd,#1}%
+  % holster and face
+  \fill[mmholster!80!black, rounded corners=0.58cm] (-2.52,-4.34) rectangle (2.52,4.30);
+  \fill[mmholster, rounded corners=0.55cm] (-2.5,-4.28) rectangle (2.5,4.32);
+  \fill[mmface, rounded corners=0.34cm] (-2.15,-3.95) rectangle (2.15,3.95);
+  \node[mm tiny, text=mmtext!80] at (0,3.68) {DIGITAL MULTIMETER};
+  % display
+  \fill[mmbezel, rounded corners=0.18cm] (-1.85,1.45) rectangle (1.85,3.40);
+  \fill[lcdbg, rounded corners=0.08cm] (-1.66,1.62) rectangle (1.66,3.22);
+  \begin{scope}[shift={(-1.47,1.92)}, scale=0.84, xslant=0.08]
+    \SevenSeg{\lab@mm@display}{\lab@mm@cells}
+  \end{scope}
+  \node[anchor=south east, font=\fsSemi\fontsize{\lab@mm@unitsize}{\lab@mm@unitsize}\selectfont, text=lcdink, inner sep=0pt] at (1.58,1.80) {\lab@mm@unit};
+  \iflab@mm@annun
+    \node[mm tiny, anchor=north west, text=lcdink] at (-1.52,3.12) {\lab@mm@mode};
+    \node[mm tiny, anchor=north west, text=lcdink] at (-1.02,3.12) {AUTO};
+  \fi
+  \coordinate (-display) at (0,2.42);
+  % buttons
+  \foreach \bx/\bt/\bn in {-1.3/HOLD/hold, 0/RANGE/range, 1.3/SELECT/select} {
+    \fill[mmbutton, rounded corners=0.09cm] (\bx-0.54,0.84) rectangle (\bx+0.54,1.24);
+    \node[mm tiny, text=white] at (\bx,1.04) {\bt};
+    \coordinate (-\bn) at (\bx,1.04);
+  }
+  % rotary switch
+  \coordinate (-knob) at (0,-0.95);
+  \fill[mmdialring] (0,-0.95) circle (1.30);
+  \foreach \a in {150,120,90,60,30,0,-30,180,210}
+    \draw[mmtext, line width=0.9pt] ($(0,-0.95)+(\a:1.16)$) -- ($(0,-0.95)+(\a:1.29)$);
+  \fill[mmknob] (0,-0.95) circle (1.02);
+  \fill[mmknob!65!black, rounded corners=0.12cm, rotate around={\lab@mm@dial:(0,-0.95)}] (-0.90,-1.19) rectangle (0.90,-0.71);
+  \fill[white, opacity=0.08] (0,-0.95) circle (0.62);
+  \draw[white, line width=2.4pt, line cap=round] ($(0,-0.95)+(\lab@mm@dial:0.36)$) -- ($(0,-0.95)+(\lab@mm@dial:0.80)$);
+  % switch positions
+  \node[mm label] (-pos-off) at ($(0,-0.95)+(150:1.62)$) {OFF};
+  \node[mm label] (-pos-acv) at ($(0,-0.95)+(120:1.60)$) {V\acsym};
+  \node[mm label] (-pos-dcv) at ($(0,-0.95)+(90:1.57)$) {V\dcsym};
+  \node[mm label] (-pos-mv)  at ($(0,-0.95)+(60:1.60)$) {mV};
+  \node[mm label] (-pos-ohm) at ($(0,-0.95)+(30:1.60)$) {Ω};
+  \node[mm label] (-pos-cont) at ($(0,-0.95)+(0:1.66)$) {)))};
+  \coordinate (-pos-diode) at ($(0,-0.95)+(-30:1.62)$);
+  \fill[mmtext] ($(-pos-diode)+(-0.13,0.10)$) -- ($(-pos-diode)+(-0.13,-0.10)$) -- ($(-pos-diode)+(0.05,0)$) -- cycle;
+  \draw[mmtext, line width=0.8pt] ($(-pos-diode)+(0.07,0.11)$) -- ($(-pos-diode)+(0.07,-0.11)$);
+  \node[mm label] (-pos-dca) at ($(0,-0.95)+(180:1.64)$) {A\dcsym};
+  \node[mm label] (-pos-aca) at ($(0,-0.95)+(210:1.62)$) {A\acsym};
+  % input jacks
+  \foreach \jx/\jc/\jt/\jn in {-1.5/jackred/10A/jackA, -0.5/jackred/{mA\,µA}/jackmA, 0.5/jackblack/COM/jackCOM, 1.5/jackred/{V\,Ω}/jackV} {
+    \fill[\jc!75!black] (\jx,-3.37) circle (0.31);
+    \fill[\jc] (\jx,-3.35) circle (0.29);
+    \fill[jackhole] (\jx,-3.35) circle (0.15);
+    \fill[white, opacity=0.25] (\jx-0.12,-3.24) circle (0.05);
+    \node[mm tiny, text=mmtext] at (\jx,-2.86) {\jt};
+    \coordinate (-\jn) at (\jx,-3.35);
+  }
+}}}
+
+% ---------------------------------------------------------------- bench DC power supply
+\pgfkeys{/lab/psu/.cd, volt/.store in=\lab@psu@volt, volt=9.00, amp/.store in=\lab@psu@amp, amp=0.00}
+\tikzset{pics/psu/.style={code={%
+  \pgfkeys{/lab/psu/.cd,#1}%
+  \fill[psucase!80!black, rounded corners=0.16cm] (-1.92,-1.20) rectangle (1.92,1.16);
+  \fill[psucase, rounded corners=0.15cm] (-1.9,-1.15) rectangle (1.9,1.18);
+  \fill[psupanel, rounded corners=0.08cm] (-1.75,-1.0) rectangle (1.75,1.02);
+  \foreach \wx/\wv/\wu in {-1.62/\lab@psu@volt/V, 0.12/\lab@psu@amp/A} {
+    \fill[ledwin, rounded corners=0.05cm] (\wx,0.20) rectangle (\wx+1.50,0.88);
+    \begin{scope}[shift={(\wx+0.13,0.32)}, scale=0.44, xslant=0.06, ss lit/.style={fill=ledon}, ss ghost/.style={fill=ledoff}]
+      \SevenSeg{\wv}{3}
+    \end{scope}
+    \node[mm tiny, text=white, anchor=south east] at (\wx+1.44,0.24) {\wu};
+  }
+  \foreach \kx in {-1.15,-0.35} {
+    \fill[psucase] (\kx,-0.47) circle (0.33);
+    \fill[psucase!70!black] (\kx,-0.47) circle (0.24);
+    \draw[white, line width=1.1pt] (\kx,-0.47) -- ++(70:0.2);
+  }
+  \node[mm tiny, text=white!80] at (-1.15,-0.90) {VOLT};
+  \node[mm tiny, text=white!80] at (-0.35,-0.90) {AMP};
+  \foreach \tx/\tc/\tn in {0.62/jackred/plus, 1.32/jackblack/minus} {
+    \fill[\tc!70!black] (\tx,-0.48) circle (0.25);
+    \fill[\tc] (\tx,-0.46) circle (0.23);
+    \fill[pinmetal] (\tx,-0.46) circle (0.09);
+    \coordinate (-\tn) at (\tx,-0.46);
+  }
+  \node[font=\fsBold\fontsize{7}{7}\selectfont, text=white] at (0.62,-0.86) {+};
+  \node[font=\fsBold\fontsize{7}{7}\selectfont, text=white] at (1.32,-0.86) {\textendash};
+}}}
+
+% ---------------------------------------------------------------- breadboard (top-left corner at origin, y downwards)
+% column c sits at x = 0.3*(c+1); rows: P (+ rail), N (- rail), a..e, f..j, Q (bottom +), M (bottom -)
+\def\bbrow@P{-0.40}\def\bbrow@N{-0.70}
+\def\bbrow@a{-1.30}\def\bbrow@b{-1.60}\def\bbrow@c{-1.90}\def\bbrow@d{-2.20}\def\bbrow@e{-2.50}
+\def\bbrow@f{-3.10}\def\bbrow@g{-3.40}\def\bbrow@h{-3.70}\def\bbrow@i{-4.00}\def\bbrow@j{-4.30}
+\def\bbrow@Q{-4.90}\def\bbrow@M{-5.20}
+\newcommand\bbx[1]{\fpeval{0.3*(#1+1)}}
+\newcommand\bby[1]{\csname bbrow@#1\endcsname}
+\newcommand\bb[2]{(\bbx{#1},\bby{#2})}
+\newif\iflab@bb@half
+\pgfkeys{/lab/bb/.cd, cols/.store in=\lab@bb@cols, cols=20, half/.is if=lab@bb@half, half=false}
+\tikzset{pics/breadboard/.style={code={%
+  \pgfkeys{/lab/bb/.cd,#1}%
+  \pgfmathsetmacro\bbW{0.3*(\lab@bb@cols+3)}
+  \iflab@bb@half
+    \fill[bbedge, rounded corners=0.14cm] (-0.03,0.03) -- (\bbW+0.03,0.03) -- (\bbW+0.03,-3.0) -- (-0.03,-3.0) -- cycle;
+    \fill[bbboard, rounded corners=0.12cm] (0,0) -- (\bbW,0) -- (\bbW,-2.97) -- (0,-2.97) -- cycle;
+    \fill[bbgroove] (0.05,-2.70) rectangle (\bbW-0.05,-2.97);
+    \draw[bbedge, line width=0.6pt, decorate, decoration={zigzag, amplitude=0.035cm, segment length=0.16cm}] (0,-2.97) -- (\bbW,-2.97);
+  \else
+    \fill[bbedge, rounded corners=0.14cm] (-0.03,0.03) rectangle (\bbW+0.03,-5.63);
+    \fill[bbboard, rounded corners=0.12cm] (0,0) rectangle (\bbW,-5.60);
+    \fill[bbgroove] (0.05,-2.68) rectangle (\bbW-0.05,-2.92);
+  \fi
+  % rail lines
+  \draw[railred, line width=0.9pt] (0.45,-0.17) -- (\bbW-0.45,-0.17);
+  \draw[railblue, line width=0.9pt] (0.45,-0.93) -- (\bbW-0.45,-0.93);
+  \node[font=\fsBold\fontsize{6.5}{7}\selectfont, text=railred] at (0.24,-0.40) {+};
+  \node[font=\fsBold\fontsize{6.5}{7}\selectfont, text=railblue] at (0.24,-0.70) {\textendash};
+  \node[font=\fsBold\fontsize{6.5}{7}\selectfont, text=railred] at (\bbW-0.24,-0.40) {+};
+  \node[font=\fsBold\fontsize{6.5}{7}\selectfont, text=railblue] at (\bbW-0.24,-0.70) {\textendash};
+  \iflab@bb@half\else
+    \draw[railred, line width=0.9pt] (0.45,-4.67) -- (\bbW-0.45,-4.67);
+    \draw[railblue, line width=0.9pt] (0.45,-5.43) -- (\bbW-0.45,-5.43);
+    \node[font=\fsBold\fontsize{6.5}{7}\selectfont, text=railred] at (0.24,-4.90) {+};
+    \node[font=\fsBold\fontsize{6.5}{7}\selectfont, text=railblue] at (0.24,-5.20) {\textendash};
+  \fi
+  % holes
+  \foreach \cc in {1,...,\lab@bb@cols} {
+    \pgfmathsetmacro\hx{0.3*(\cc+1)}
+    \pgfmathtruncatemacro\gap{mod(\cc,6)}
+    \ifnum\gap=0\else
+      \foreach \rr in {P,N} \fill[bbhole, rounded corners=0.012cm] (\hx-0.055,\bby{\rr}-0.055) rectangle (\hx+0.055,\bby{\rr}+0.055);
+      \iflab@bb@half\else
+        \foreach \rr in {Q,M} \fill[bbhole, rounded corners=0.012cm] (\hx-0.055,\bby{\rr}-0.055) rectangle (\hx+0.055,\bby{\rr}+0.055);
+      \fi
+    \fi
+    \foreach \rr in {a,b,c,d,e} \fill[bbhole, rounded corners=0.012cm] (\hx-0.055,\bby{\rr}-0.055) rectangle (\hx+0.055,\bby{\rr}+0.055);
+    \iflab@bb@half\else
+      \foreach \rr in {f,g,h,i,j} \fill[bbhole, rounded corners=0.012cm] (\hx-0.055,\bby{\rr}-0.055) rectangle (\hx+0.055,\bby{\rr}+0.055);
+    \fi
+  }
+  % row letters and column numbers
+  \foreach \rr in {a,b,c,d,e} {
+    \node[font=\fsMedium\fontsize{4.6}{5}\selectfont, text=muted] at (0.27,\bby{\rr}) {\rr};
+    \node[font=\fsMedium\fontsize{4.6}{5}\selectfont, text=muted] at (\bbW-0.27,\bby{\rr}) {\rr};
+  }
+  \iflab@bb@half\else
+    \foreach \rr in {f,g,h,i,j} {
+      \node[font=\fsMedium\fontsize{4.6}{5}\selectfont, text=muted] at (0.27,\bby{\rr}) {\rr};
+      \node[font=\fsMedium\fontsize{4.6}{5}\selectfont, text=muted] at (\bbW-0.27,\bby{\rr}) {\rr};
+    }
+  \fi
+  \foreach \cc in {1,5,10,15,20,25,30} {
+    \ifnum\cc>\lab@bb@cols\else
+      \node[font=\fsMedium\fontsize{4.4}{5}\selectfont, text=muted] at (0.3*\cc+0.3,-1.06) {\cc};
+    \fi
+  }
+}}}
+
+% helpers for components placed on the breadboard (call inside a tikzpicture whose breadboard pic is at (0,0))
+% \bbres{col1}{col2}{row}{bands}: resistor lying along a row
+\newcommand\bbres[4]{%
+  \pgfmathsetmacro\lab@span{0.3*(#2-#1)}%
+  \pgfmathsetmacro\lab@leadlen{\lab@span-0.75}%
+  \pic[scale=0.5, transform shape] at ({0.3*((#1+#2)/2+1)},\bby{#3}) {resistor={bands={#4}, lead=\lab@leadlen, leadwidth=0.8pt}};
+  \fill[pinmetal!70!black] (\bbx{#1}-0.035,\bby{#3}-0.035) rectangle ++(0.07,0.07);
+  \fill[pinmetal!70!black] (\bbx{#2}-0.035,\bby{#3}-0.035) rectangle ++(0.07,0.07);
+}
+% \bbjumper[color]{col1}{row1}{col2}{row2}{via-y}: wire hopping above the board
+\newcommand\bbpin[2]{\fill[pinmetal!85!black] (\bbx{#1}-0.05,\bby{#2}-0.05) rectangle ++(0.10,0.10);}
+\newcommand\bbstrip[2]{% highlight the 5 connected holes of a column strip: #1 col, #2 top|bottom
+  \ifx#2t\fill[teal, opacity=0.16, rounded corners=0.08cm] (\bbx{#1}-0.13,\bby{a}+0.15) rectangle (\bbx{#1}+0.13,\bby{e}-0.15);\fi
+  \ifx#2b\fill[teal, opacity=0.16, rounded corners=0.08cm] (\bbx{#1}-0.13,\bby{f}+0.15) rectangle (\bbx{#1}+0.13,\bby{j}-0.15);\fi}
+% \bbrail{col1}{col2}{row}: highlight a run of rail holes
+\newcommand\bbrail[3]{\fill[teal, opacity=0.16, rounded corners=0.08cm] (\bbx{#1}-0.15,\bby{#3}+0.14) rectangle (\bbx{#2}+0.15,\bby{#3}-0.14);}
+
+% ---------------------------------------------------------------- banana plug, pin along +x, cable at the origin
+\pgfkeys{/lab/plug/.cd, color/.store in=\lab@plug@color, color=leadred}
+\tikzset{pics/plug/.style={code={%
+  \pgfkeys{/lab/plug/.cd,#1}%
+  \draw[pinmetal!75!black, line width=2.0pt, line cap=round] (0.55,0) -- (0.86,0);
+  \draw[pinmetal, line width=1.1pt, line cap=round] (0.58,0.01) -- (0.84,0.01);
+  \fill[\lab@plug@color!80!black, rounded corners=0.03cm] (0.44,-0.13) rectangle (0.58,0.13);
+  \fill[\lab@plug@color, rounded corners=0.07cm] (0,-0.10) rectangle (0.48,0.10);
+  \fill[white, opacity=0.3] (0.05,0.03) rectangle (0.42,0.065);
+}}}
+
+% ---------------------------------------------------------------- LED seen from above (for the breadboard)
+% legs at (-0.15,0) anode and (0.15,0) cathode = one hole pitch; flat flange edge on the cathode side
+\tikzset{pics/ledtop/.style={code={%
+  \fill[ledred!70!black] (33.6:0.36) arc[start angle=33.6, end angle=326.4, radius=0.36] -- cycle;
+  \fill[ledred, opacity=0.92] (0,0) circle (0.29);
+  \fill[black, opacity=0.25] (-0.15,0) circle (0.05);
+  \fill[black, opacity=0.32] (0.15,0) circle (0.07);
+  \fill[white, opacity=0.55] (-0.11,0.11) circle (0.075);
+  \draw[ledred!55!black, line width=0.35pt] (0,0) circle (0.29);
+  \coordinate (-anode) at (-0.15,0);
+  \coordinate (-cathode) at (0.15,0);
+}}}
+
+% ---------------------------------------------------------------- lamp in a holder with two screw terminals (left/right)
+\tikzset{pics/lampholder/.style={code={%
+  \pic at (0,0.10) {bulb={#1}};
+  \fill[mmknob, rounded corners=0.06cm] (-0.80,-0.20) rectangle (0.80,0.16);
+  \fill[white, opacity=0.10] (-0.76,0.04) rectangle (0.76,0.12);
+  \fill[basemetal!80!black, rounded corners=0.03cm] (-0.33,0.10) rectangle (0.33,0.30);
+  \fill[basemetal!45, rounded corners=0.02cm] (-0.33,0.24) rectangle (0.33,0.30);
+  \foreach \sx in {-0.56,0.56} {
+    \fill[basemetal] (\sx,-0.02) circle (0.12);
+    \draw[basemetal!45!black, line width=0.7pt] (\sx-0.07,-0.02) -- (\sx+0.07,-0.02);
+  }
+  \coordinate (-l) at (-0.56,-0.02);
+  \coordinate (-r) at (0.56,-0.02);
+}}}

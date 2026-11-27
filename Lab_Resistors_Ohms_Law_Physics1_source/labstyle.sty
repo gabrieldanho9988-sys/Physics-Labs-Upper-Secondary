@@ -1,0 +1,204 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{labstyle}[2026/11/27 Laboration Resistorer och Ohms lag -- fonts, colours, drawing library]
+
+% ---------------------------------------------------------------- fonts & language
+\RequirePackage{fontspec}
+\RequirePackage{babel}
+\babelprovide[import, main]{swedish}
+\babelfont{rm}[Numbers=Lining]{Fira Sans}
+\babelfont{sf}[Numbers=Lining]{Fira Sans}
+\babelfont{tt}[Scale=MatchLowercase]{DejaVu Sans Mono}
+\RequirePackage{unicode-math}
+\setmathfont{FiraMath-Regular.otf}
+\newfontfamily\fsLight{Fira Sans Light}[Numbers=Lining]
+\newfontfamily\fsMedium{Fira Sans Medium}[Numbers=Lining]
+\newfontfamily\fsSemi{Fira Sans SemiBold}[Numbers=Lining]
+\newfontfamily\fsBold{Fira Sans Bold}[Numbers=Lining]
+\newfontfamily\fsXB{Fira Sans ExtraBold}[Numbers=Lining]
+\newfontfamily\fsTab{Fira Sans}[Numbers={Lining,Monospaced}]
+\newfontfamily\fsSemiTab{Fira Sans SemiBold}[Numbers={Lining,Monospaced}]
+
+% ---------------------------------------------------------------- colours
+\RequirePackage{xcolor}
+\definecolor{ink}{HTML}{1F2933}
+\definecolor{navy}{HTML}{16304C}
+\definecolor{accent}{HTML}{2A74B8}
+\definecolor{accentdark}{HTML}{1D5A92}
+\definecolor{purple}{HTML}{7C5CD6}
+\definecolor{teal}{HTML}{0D9488}
+\definecolor{muted}{HTML}{5B6B7C}
+\definecolor{rule}{HTML}{D5DEE8}
+\definecolor{soft}{HTML}{F3F6FA}
+\definecolor{softblue}{HTML}{EAF2FA}
+\definecolor{softteal}{HTML}{E5F4F2}
+\definecolor{softpurple}{HTML}{F1EDFB}
+\definecolor{warn}{HTML}{C2410C}
+\definecolor{warnbg}{HTML}{FFF3EB}
+\definecolor{okgreen}{HTML}{2E7D32}
+% equipment
+\definecolor{leadred}{HTML}{D32F2F}
+\definecolor{leadblack}{HTML}{2B3238}
+\definecolor{wirecol}{HTML}{3C4A57}
+\definecolor{leadmetal}{HTML}{9AA5B1}
+\definecolor{pinmetal}{HTML}{B7C0C9}
+\definecolor{resbody}{HTML}{DDBF8C}
+\definecolor{resbodyhi}{HTML}{F1DDB8}
+\definecolor{resbodylo}{HTML}{B8955F}
+\definecolor{resedge}{HTML}{9C7B4F}
+\definecolor{ledred}{HTML}{E53935}
+\definecolor{lcdbg}{HTML}{C9D7C3}
+\definecolor{lcdghost}{HTML}{B9C8B3}
+\definecolor{lcdink}{HTML}{1D2A24}
+\definecolor{lcdedge}{HTML}{A9BAA3}
+\definecolor{mmholster}{HTML}{0E7C73}
+\definecolor{mmface}{HTML}{E9EEF2}
+\definecolor{mmbezel}{HTML}{25323F}
+\definecolor{mmbutton}{HTML}{4A5B6C}
+\definecolor{mmdialring}{HTML}{C3CCD5}
+\definecolor{mmknob}{HTML}{2F3D4B}
+\definecolor{mmtext}{HTML}{25323F}
+\definecolor{jackred}{HTML}{C62828}
+\definecolor{jackblack}{HTML}{263238}
+\definecolor{jackhole}{HTML}{101418}
+\definecolor{psucase}{HTML}{D9E0E7}
+\definecolor{psupanel}{HTML}{2B3A48}
+\definecolor{ledon}{HTML}{FF5446}
+\definecolor{ledoff}{HTML}{4A2B2B}
+\definecolor{ledwin}{HTML}{17110F}
+\definecolor{bbboard}{HTML}{F6F6F3}
+\definecolor{bbedge}{HTML}{CDD2D8}
+\definecolor{bbhole}{HTML}{56616C}
+\definecolor{bbgroove}{HTML}{E4E7EA}
+\definecolor{railred}{HTML}{E0483E}
+\definecolor{railblue}{HTML}{2F6FC9}
+\definecolor{cellbody}{HTML}{22384F}
+\definecolor{cellband}{HTML}{0D9488}
+\definecolor{cellcap}{HTML}{AEB8C2}
+\definecolor{glass}{HTML}{FFF7DA}
+\definecolor{glassedge}{HTML}{C9B26A}
+\definecolor{glow}{HTML}{FFE58A}
+\definecolor{basemetal}{HTML}{B3BCC5}
+\definecolor{filament}{HTML}{E07A10}
+\definecolor{copperhi}{HTML}{EDB98C}
+\definecolor{copper}{HTML}{C47F4E}
+\definecolor{copperlo}{HTML}{7E4A28}
+% resistor colour code
+\definecolor{band-black}{HTML}{1B1B1B}
+\definecolor{band-brown}{HTML}{7A4A26}
+\definecolor{band-red}{HTML}{D7322E}
+\definecolor{band-orange}{HTML}{F28C1E}
+\definecolor{band-yellow}{HTML}{F4C515}
+\definecolor{band-green}{HTML}{3B9A48}
+\definecolor{band-blue}{HTML}{2F6FC9}
+\definecolor{band-violet}{HTML}{7D3FB0}
+\definecolor{band-grey}{HTML}{8E979F}
+\definecolor{band-white}{HTML}{FFFFFF}
+\definecolor{band-gold}{HTML}{C9A13A}
+
+% ---------------------------------------------------------------- units
+\RequirePackage{siunitx}
+\sisetup{
+  output-decimal-marker = {,},
+  group-separator = {\,},
+  group-minimum-digits = 4,
+  per-mode = symbol,
+  inter-unit-product = \ensuremath{\mkern1mu\cdot\mkern1mu},
+  uncertainty-mode = separate,
+}
+
+% small symbols that no installed font provides
+\newcommand\dcsym{\mbox{\raisebox{0.56ex}{\makebox[0.66em][l]{%
+  \rlap{\rule{0.66em}{0.08em}}%
+  \raisebox{-0.24em}{\rule{0.16em}{0.08em}\hspace{0.09em}\rule{0.16em}{0.08em}\hspace{0.09em}\rule{0.16em}{0.08em}}}}}}
+\newcommand\acsym{\ensuremath{\sim}}
+
+% ---------------------------------------------------------------- TikZ
+\RequirePackage{tikz}
+\usetikzlibrary{calc, positioning, arrows.meta, decorations.pathreplacing,
+  decorations.pathmorphing, decorations.markings, backgrounds, fit, shapes.geometric, shapes.misc}
+\RequirePackage[european, straightvoltages]{circuitikz}
+\ctikzset{
+  bipoles/thickness = 1,
+  resistors/scale = 0.85,
+  diodes/scale = 0.8,
+  batteries/scale = 0.9,
+  bipoles/lamp/height = 0.5,
+  bipoles/lamp/width = 0.5,
+}
+
+\tikzset{
+  >={Stealth[length=2.2mm, width=1.6mm]},
+  lab/.style={line cap=round, line join=round, color=ink, font=\small},
+  jdot/.style={circle, fill=ink, inner sep=0pt, minimum size=3.6pt},
+  tdot/.style={circle, draw=ink, fill=white, line width=0.7pt, inner sep=0pt, minimum size=4.4pt},
+  meter/.style={circle, draw=ink, line width=0.9pt, fill=white, minimum size=7.6mm, inner sep=0pt, font=\fsSemi},
+  reading/.style={rounded corners=2.2pt, fill=lcdbg, draw=lcdedge, line width=0.5pt,
+    font=\fsSemiTab\small, text=lcdink, inner xsep=3.6pt, inner ysep=2.4pt},
+  tag/.style={font=\footnotesize, text=ink, inner sep=1.5pt},
+  note/.style={font=\footnotesize, text=muted, align=left, inner sep=1pt},
+  callout/.style={draw=muted, line width=0.5pt},
+  calldot/.style={circle, fill=accent, inner sep=0pt, minimum size=3.4pt},
+  lab lead/.style={draw=leadmetal, line width=0.9pt, line cap=round, line join=round},
+  cable/.style={draw=#1!70!black, line width=2.6pt, line cap=round, line join=round,
+    postaction={draw=#1, line width=1.7pt, line cap=round}},
+  cable/.default=leadred,
+  jumper/.style={draw=#1!75!black, line width=2.1pt, line cap=round, rounded corners=2.2pt,
+    postaction={draw=#1, line width=1.3pt, line cap=round, rounded corners=2.2pt}},
+  cwire/.style={draw=wirecol, line width=1.6pt, line cap=round, line join=round, rounded corners=4pt},
+}
+
+% ---------------------------------------------------------------- seven-segment digits
+% Segments live in a unit cell: digit height 1, width 0.52, pitch 0.80.
+\tikzset{
+  ss/a/.style={insert path={(0.020,1.000) -- (0.075,1.055) -- (0.445,1.055) -- (0.500,1.000) -- (0.445,0.945) -- (0.075,0.945) -- cycle}},
+  ss/b/.style={insert path={(0.520,0.520) -- (0.575,0.575) -- (0.575,0.925) -- (0.520,0.980) -- (0.465,0.925) -- (0.465,0.575) -- cycle}},
+  ss/c/.style={insert path={(0.520,0.020) -- (0.575,0.075) -- (0.575,0.425) -- (0.520,0.480) -- (0.465,0.425) -- (0.465,0.075) -- cycle}},
+  ss/d/.style={insert path={(0.020,0.000) -- (0.075,0.055) -- (0.445,0.055) -- (0.500,0.000) -- (0.445,-0.055) -- (0.075,-0.055) -- cycle}},
+  ss/e/.style={insert path={(0.000,0.020) -- (0.055,0.075) -- (0.055,0.425) -- (0.000,0.480) -- (-0.055,0.425) -- (-0.055,0.075) -- cycle}},
+  ss/f/.style={insert path={(0.000,0.520) -- (0.055,0.575) -- (0.055,0.925) -- (0.000,0.980) -- (-0.055,0.925) -- (-0.055,0.575) -- cycle}},
+  ss/g/.style={insert path={(0.020,0.500) -- (0.075,0.555) -- (0.445,0.555) -- (0.500,0.500) -- (0.445,0.445) -- (0.075,0.445) -- cycle}},
+  ss/dp/.style={insert path={(0.600,-0.055) rectangle (0.690,0.035)}},
+  ss/digit 0/.style={ss/a,ss/b,ss/c,ss/d,ss/e,ss/f},
+  ss/digit 1/.style={ss/b,ss/c},
+  ss/digit 2/.style={ss/a,ss/b,ss/g,ss/e,ss/d},
+  ss/digit 3/.style={ss/a,ss/b,ss/g,ss/c,ss/d},
+  ss/digit 4/.style={ss/f,ss/g,ss/b,ss/c},
+  ss/digit 5/.style={ss/a,ss/f,ss/g,ss/c,ss/d},
+  ss/digit 6/.style={ss/a,ss/f,ss/g,ss/e,ss/c,ss/d},
+  ss/digit 7/.style={ss/a,ss/b,ss/c},
+  ss/digit 8/.style={ss/a,ss/b,ss/c,ss/d,ss/e,ss/f,ss/g},
+  ss/digit 9/.style={ss/a,ss/b,ss/c,ss/d,ss/f,ss/g},
+  ss/digit -/.style={ss/g},
+  ss/digit O/.style={ss/a,ss/b,ss/c,ss/d,ss/e,ss/f},
+  ss/digit L/.style={ss/d,ss/e,ss/f},
+  ss lit/.style={fill=lcdink},
+  ss ghost/.style={fill=lcdghost},
+}
+\ExplSyntaxOn
+\int_new:N \l__lab_ss_cell_int
+\int_new:N \l__lab_ss_count_int
+\str_new:N \l__lab_ss_str
+% \SevenSeg{<text>}{<number of cells>}: right-aligned digits, '.' lights the decimal point
+\NewDocumentCommand \SevenSeg { m m }
+  {
+    \str_set:Nx \l__lab_ss_str {#1}
+    \int_zero:N \l__lab_ss_count_int
+    \str_map_inline:Nn \l__lab_ss_str
+      { \str_if_eq:nnF {##1} {.} { \int_incr:N \l__lab_ss_count_int } }
+    \int_step_inline:nnn { 0 } { #2 - 1 }
+      { \fill [ ss~ghost , shift = { ( ##1 * 0.80 , 0 ) } , ss/digit~8 ] ; }
+    \int_set:Nn \l__lab_ss_cell_int { #2 - \l__lab_ss_count_int - 1 }
+    \str_map_inline:Nn \l__lab_ss_str
+      {
+        \str_if_eq:nnTF {##1} {.}
+          { \fill [ ss~lit , shift = { ( \int_use:N \l__lab_ss_cell_int * 0.80 , 0 ) } , ss/dp ] ; }
+          {
+            \int_incr:N \l__lab_ss_cell_int
+            \fill [ ss~lit , shift = { ( \int_use:N \l__lab_ss_cell_int * 0.80 , 0 ) } , ss/digit~##1 ] ;
+          }
+      }
+  }
+\ExplSyntaxOff
+
+\input{labpics}
+\endinput

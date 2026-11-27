@@ -48,8 +48,10 @@ During the 2018–2019 school year, **several lab sessions** were held with my s
 
 📄 **[Read the lab document (PDF)](./Lab_Resistors_Ohms_Law_Physics1.pdf)**
 
+🛠️ **[LaTeX source](./Lab_Resistors_Ohms_Law_Physics1_source/)**: every figure is drawn in code (TikZ/CircuiTikZ).
+
 > **Lab author:** Prof. Emeritus Dag Stranneby (Örebro University, Department of Science and Technology), Professor of Electronics Production and Director of Campus Alfred Nobel in Karlskoga.
-> **Illustrations of the equipment** added by Gabriel Danho.
+> **Layout and illustrations (version 2, November 2026):** Gabriel Danho.
 
 Topics covered in this lab:
 - measuring resistance with a multimeter

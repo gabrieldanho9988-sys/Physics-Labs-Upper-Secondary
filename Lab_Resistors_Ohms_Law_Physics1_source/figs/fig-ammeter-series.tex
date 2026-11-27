@@ -1,0 +1,19 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{labstyle}
+\begin{document}
+\begin{tikzpicture}[lab]
+  % battery (+ at the top), lamp in a holder, multimeter as ammeter inserted in the top wire
+  \pic[rotate=90] (bat) at (0.6,1.65) {cell};
+  \pic (lamp) at (6.0,1.08) {lampholder};
+  \draw[cwire] (bat-plus) -- (0.6,4.1) -- (2.3,4.1);
+  \draw[cwire] (3.9,4.1) -- (7.1,4.1) -- (7.1,1.06) -- (lamp-r);
+  \draw[cwire] (lamp-l) -- (5.0,1.06) -- (5.0,-0.45) -- (0.6,-0.45) -- (bat-minus);
+  \pic[scale=0.40, transform shape] (m) at (3.1,1.80) {multimeter={display=1.50, unit=A, dial=180}};
+  \draw[cable=leadred, rounded corners=5pt] (m-jackA) -- (2.5,0.10) -- (1.7,0.10) -- (1.7,3.80) -- (2.3,3.80) -- (2.3,4.1);
+  \draw[cable=leadblack, rounded corners=5pt] (m-jackCOM) -- (3.3,0.10) -- (4.5,0.10) -- (4.5,3.80) -- (3.9,3.80) -- (3.9,4.1);
+  \foreach \p in {(2.3,4.1), (3.9,4.1)} \fill[pinmetal!70!black] \p circle (0.075);
+  % labels
+  \node[tag, anchor=west, font=\fsSemi\footnotesize] at (6.85,2.3) {\qty{1}{\ohm}};
+  \draw[->, accent, line width=1.1pt] (5.3,4.38) -- (6.4,4.38) node[midway, above, text=accentdark, font=\footnotesize]{\(I\)};
+\end{tikzpicture}
+\end{document}

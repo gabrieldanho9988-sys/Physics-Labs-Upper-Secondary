@@ -1,0 +1,25 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{labstyle}
+\begin{document}
+\begin{tikzpicture}[lab, line width=0.9pt]
+  % source on the left, main ammeter, two vertical branches with an ammeter each, voltmeter across each resistor
+  \draw (0,0) to[battery1, invert, l={\qty{9.0}{\volt}}] (0,3.2) -- (7.4,3.2);
+  \draw (0,0) -- (5.8,0);
+  \node[font=\fsSemi\small, text=leadred] at (0.32,2.02) {+};
+  \node[font=\fsSemi\small] at (0.32,1.18) {\textminus};
+  \node[meter] (A0) at (1.55,3.2) {A};
+  \node[reading, above=5pt of A0] {1,80 A};
+  % branch 1 at x = 3.4, branch 2 at x = 6.6
+  \foreach \x/\n in {3.4/1, 7.4/2} {
+    \draw (\x,3.2) -- (\x,2.2) to[R, l_={\(R_\n\)}] (\x,0.3) -- (\x,0);
+    \node[meter] (A\n) at (\x,2.55) {A};
+    \node[reading, anchor=east] at ([xshift=-5pt]A\n.west) {0,90 A};
+    \draw (\x,1.9) node[jdot]{} -- (\x+1.2,1.9) -- (\x+1.2,0.6) -- (\x,0.6) node[jdot]{};
+    \node[meter] (V\n) at (\x+1.2,1.25) {V};
+    \node[reading, anchor=west] at ([xshift=4pt]V\n.east) {9,00 V};
+  }
+  \draw (5.8,0) -- (7.4,0);
+  \node[jdot] at (3.4,3.2) {}; \node[jdot] at (3.4,0) {};
+  \node[note, anchor=north west] at (0.0,-0.25) {\(R_1 = R_2 = \qty{10.0}{\ohm}\)};
+\end{tikzpicture}
+\end{document}

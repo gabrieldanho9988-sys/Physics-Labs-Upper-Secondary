@@ -1,0 +1,37 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{labstyle}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\begin{document}
+\begin{tikzpicture}[lab]
+\begin{axis}[
+  width=9.2cm, height=6.0cm,
+  xmin=0, xmax=3.2, ymin=0, ymax=25,
+  axis lines=left, axis line style={ink, line width=0.8pt, -{Stealth[length=2mm]}},
+  xlabel={Spänning \(U\) (V)}, ylabel={Ström \(I\) (mA)},
+  xlabel style={font=\small, yshift=2pt},
+  ylabel style={at={(ticklabel* cs:1.0)}, anchor=south east, rotate=-90, font=\small, xshift=4pt},
+  xtick={0,0.5,...,3.0}, ytick={0,5,...,20},
+  minor xtick={0.25,0.75,...,3.0},
+  grid=major, grid style={rule, line width=0.45pt},
+  tick label style={font=\footnotesize\fsTab, text=muted},
+  /pgf/number format/use comma,
+  /pgf/number format/fixed,
+  enlargelimits=false, clip=true,
+]
+  % resistor 220 ohm: straight line through the origin
+  \addplot[accent, line width=1.8pt, domain=0:3.2, samples=2] {x/220*1000};
+  % red LED: practically no current below ~1.7 V, then a steep rise
+  \addplot[ledred, line width=1.8pt, domain=0:2.07, samples=220] {20*exp((x-2.0)/0.075)};
+  % slope triangle on the resistor line
+  \draw[accentdark, line width=0.7pt] (axis cs:2.3,{2.3/0.22}) -- (axis cs:2.9,{2.3/0.22}) -- (axis cs:2.9,{2.9/0.22});
+  \node[font=\scriptsize, text=accentdark, anchor=north] at (axis cs:2.6,{2.3/0.22}) {\(\Delta U\)};
+  \node[font=\scriptsize, text=accentdark, anchor=west] at (axis cs:2.9,{2.6/0.22}) {\(\Delta I\)};
+  \draw[ledred!80!black, dashed, line width=0.7pt] (axis cs:1.72,0) -- (axis cs:1.72,7.5);
+  \node[font=\scriptsize, text=ledred!80!black, anchor=south, align=center, fill=white, inner sep=1pt] at (axis cs:1.42,7.6) {ca 1,7\,V};
+\end{axis}
+% labels
+\node[anchor=west, font=\fsSemi\footnotesize, text=accentdark, align=left] at (5.42,0.62) {Resistor \qty{220}{\ohm}\\[-1pt]{\fsTab\footnotesize rät linje: ohmsk}};
+\node[anchor=east, font=\fsSemi\footnotesize, text=ledred!85!black, align=right] at (4.35,3.55) {Röd lysdiod\\[-1pt]{\fsTab\footnotesize kurva: icke-ohmsk}};
+\end{tikzpicture}
+\end{document}

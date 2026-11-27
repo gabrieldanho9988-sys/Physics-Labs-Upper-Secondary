@@ -1,0 +1,17 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{labstyle}
+\begin{document}
+\begin{tikzpicture}[lab, line width=0.9pt]
+  % two resistors in parallel between two terminals
+  \draw (0,0.65) node[tdot]{} -- (0.8,0.65);
+  \draw (0.8,0) -- (0.8,1.3);
+  \draw (0.8,1.3) to[R, l=\(R_A\)] (3.6,1.3);
+  \draw (0.8,0) to[R, l_=\(R_B\)] (3.6,0);
+  \draw (3.6,0) -- (3.6,1.3);
+  \draw (3.6,0.65) -- (4.4,0.65) node[tdot]{};
+  \node[jdot] at (0.8,0.65) {}; \node[jdot] at (3.6,0.65) {};
+  \node[anchor=west, text=ink, align=left] at (4.85,0.65)
+    {\(\dfrac{1}{R_{\text{parallell}}} = \dfrac{1}{R_A} + \dfrac{1}{R_B}\)\\[8pt]
+     \(\Longleftrightarrow\quad R_{\text{parallell}} = \dfrac{R_A \cdot R_B}{R_A + R_B}\)};
+\end{tikzpicture}
+\end{document}

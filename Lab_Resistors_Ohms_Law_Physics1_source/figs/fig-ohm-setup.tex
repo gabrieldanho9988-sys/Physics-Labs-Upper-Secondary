@@ -1,0 +1,26 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{labstyle}
+\begin{document}
+\begin{tikzpicture}[lab]
+  % multimeter used as an ammeter (mA range)
+  \pic[scale=0.50, transform shape] (dmm) at (0,0) {multimeter={display=13.04, unit=mA, unitsize=9, dial=180}};
+  % the circuit: 9 V source (+ at the bottom), R_A and R_B in series, meter between T1 and T2
+  \begin{scope}[line width=0.9pt]
+    \draw (2.75,1.5) node[tdot]{} -- (3.2,1.5) to[R, l=\(R_A\)] (5.2,1.5) -- (6.7,1.5)
+          to[battery1, invert, l_={\qty{9}{\volt}}] (6.7,-1.5) -- (5.2,-1.5) to[R, l=\(R_B\)] (3.2,-1.5) -- (2.75,-1.5) node[tdot]{};
+    \node[font=\fsSemi\small, text=leadred] at (6.35,-0.62) {+};
+    \node[font=\fsSemi\small] at (6.35,0.62) {\textminus};
+    \draw[->, accent, line width=1.1pt] (5.9,-1.1) -- (5.0,-1.1) node[midway, above=-1pt, text=accentdark]{\(I\)};
+  \end{scope}
+  % test leads
+  \draw[cable=leadblack, rounded corners=7pt] (dmm-jackCOM) -- (0.25,-1.95) -- (1.65,-1.95) -- (1.65,1.5) -- (2.75,1.5);
+  \draw[cable=leadred, rounded corners=7pt] (dmm-jackmA) -- (-0.25,-2.55) -- (2.2,-2.55) -- (2.2,-1.5) -- (2.75,-1.5);
+  % callouts
+  \node[calldot] at (-0.82,-0.475) {};
+  \draw[callout] (-0.82,-0.475) -- (-1.7,-0.475) node[anchor=east, tag, align=right]{Läge A\dcsym\\[-1pt]\footnotesize(likström)};
+  \node[calldot] at (-0.25,-1.675) {};
+  \draw[callout] (-0.25,-1.675) -- (-0.9,-2.1) -- (-1.7,-2.1) node[anchor=east, tag, align=right]{Röd sladd\\[-1pt]i uttaget mA};
+  \node[calldot] at (0.56,1.51) {};
+  \draw[callout] (0.56,1.51) -- (1.0,2.45) -- (1.4,2.45) node[anchor=west, tag]{Visar strömmen i mA};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,7 @@
+# build output (the finished lab PDF lives one folder up)
+*.pdf
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz

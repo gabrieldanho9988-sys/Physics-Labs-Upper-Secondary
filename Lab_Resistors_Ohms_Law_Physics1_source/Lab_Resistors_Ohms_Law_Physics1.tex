@@ -1,0 +1,317 @@
+\documentclass[fontsize=10.5pt, parskip=half-, paper=a4]{scrartcl}
+\usepackage{labstyle}
+\usepackage[a4paper, left=19mm, right=19mm, top=25mm, bottom=24mm, headheight=14pt, headsep=7mm, footskip=11mm]{geometry}
+\usepackage{graphicx}
+\usepackage[most]{tcolorbox}
+\usepackage{tabularray}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{lastpage}
+\usepackage[headsepline=0.5pt]{scrlayer-scrpage}
+\usepackage[hidelinks, pdfusetitle=false]{hyperref}
+\hypersetup{
+  pdftitle={Laboration: Resistorer och Ohms lag (Fysik 1)},
+  pdfauthor={Gabriel Danho},
+  pdfsubject={Fysik 1 – laboration inspirerad av professor emeritus Dag Stranneby, Örebro universitet},
+  pdfkeywords={Ohms lag, resistans, seriekoppling, parallellkoppling, multimeter, lysdiod, Fysik 1},
+  pdflang={sv-SE},
+  pdfcreator={LaTeX (XeLaTeX), TikZ/CircuiTikZ},
+}
+
+\graphicspath{{figs/}}
+\AtBeginDocument{\thickmuskip=3.2mu plus 2mu\relax \medmuskip=2.6mu plus 1.5mu minus 1.5mu\relax}
+\linespread{1.06}
+\setlength{\emergencystretch}{1.5em}
+\raggedbottom
+
+% ---------------------------------------------------------------- headings
+\setkomafont{disposition}{\fsSemi\color{navy}}
+\setkomafont{section}{\fsSemi\Large\color{navy}}
+\setkomafont{subsection}{\fsSemi\large\color{navy}}
+\RedeclareSectionCommand[beforeskip=0.2\baselineskip, afterskip=0.55\baselineskip]{section}
+\RedeclareSectionCommand[beforeskip=0.9\baselineskip, afterskip=0.35\baselineskip]{subsection}
+\newcommand\labbadge[1]{\tikz[baseline=(b.base)]\node[fill=accent, text=white, rounded corners=3pt, inner sep=0pt,
+  minimum width=1.45em, minimum height=1.45em, font=\fsSemi](b){#1};}
+\renewcommand*{\sectionformat}{\labbadge{\thesection}\hspace{0.55em}}
+\makeatletter
+\renewcommand*{\sectionlinesformat}[4]{%
+  \ifx\@empty#3
+    \hspace*{#2}{\color{accent}\rule[-0.14em]{0.24em}{0.98em}}\hspace{0.5em}#4%
+  \else
+    \@hangfrom{\hspace*{#2}#3}{#4}%
+  \fi}
+\makeatother
+
+% ---------------------------------------------------------------- page styles
+\clearpairofpagestyles
+\ihead{\fsSemi\color{navy}Laboration\hspace{0.4em}{\color{accent}·}\hspace{0.4em}Resistorer och Ohms lag}
+\ohead{\color{muted}Fysik 1\hspace{0.4em}·\hspace{0.4em}Ellära}
+\ifoot*{\color{muted}Inspirerad av professor emeritus Dag Stranneby, Örebro universitet\hspace{0.45em}·\hspace{0.45em}Bearbetning: Gabriel Danho}
+\ofoot*{\color{muted}Sida \thepage\ av \pageref*{LastPage}}
+\setkomafont{pageheadfoot}{\footnotesize}
+\setkomafont{headsepline}{\color{rule}}
+\pagestyle{scrheadings}
+
+% ---------------------------------------------------------------- boxes, lists, captions
+\tcbset{labbox/.style={enhanced, boxrule=0pt, arc=2.5mm, left=4mm, right=4mm, top=2.6mm, bottom=2.6mm,
+  fontupper=\small, halign=flush left, before skip=5pt, after skip=7pt}}
+\newtcolorbox{infobox}[1][]{labbox, colback=softblue, colframe=softblue, borderline west={2.6pt}{0pt}{accent}, #1}
+\newtcolorbox{warnbox}[1][]{labbox, colback=warnbg, colframe=warnbg, borderline west={2.6pt}{0pt}{warn}, #1}
+\newtcolorbox{discbox}[1][]{labbox, colback=softpurple, colframe=softpurple, borderline west={2.6pt}{0pt}{purple}, #1}
+\newtcolorbox{tipbox}[1][]{labbox, colback=softteal, colframe=softteal, borderline west={2.6pt}{0pt}{teal}, #1}
+\newtcolorbox{formula}[1][]{labbox, colback=soft, colframe=soft, halign=center, fontupper=\normalsize, top=2.0mm, bottom=2.0mm, #1}
+\newcommand\boxtitle[1]{{\fsSemi\color{navy}#1}\par\vspace{2pt}}
+\newcommand\warnicon{\tikz[baseline=-0.25ex]{\fill[warn, rounded corners=0.7pt] (0,-0.08) -- (0.36,-0.08) -- (0.18,0.24) -- cycle;
+  \node[text=white, font=\fsBold\fontsize{6.5}{6.5}\selectfont, inner sep=0] at (0.18,0.035) {!};}}
+
+\setlist{itemsep=1.5pt, parsep=0pt, topsep=2pt}
+\setlist[itemize]{leftmargin=1.15em, label={\color{accent}\small\textbullet}}
+\setlist[enumerate]{leftmargin=1.5em, label={\fsSemi\color{accent}\arabic*.}}
+
+\captionsetup{hypcap=false, font={footnotesize}, labelfont={color=navy, bf}, textfont={color=muted}, labelsep=period,
+  justification=centering, skip=5pt, margin=6mm}
+\newcommand\fig[3][\linewidth]{% #1 width, #2 file, #3 caption + label
+  \par\vspace{3pt}{\centering\includegraphics[width=#1]{#2}\par\captionof{figure}{#3}}\par\vspace{4pt}}
+
+% answer fields and small inline drawings
+\newcommand\svar[2][26mm]{\tikz[baseline=-0.8ex]\node[draw=rule!80!muted, line width=0.6pt, fill=white, rounded corners=2pt,
+  minimum width=#1, minimum height=6.4mm, inner sep=0pt]{};\,#2}
+\newcommand\resicon[1]{\tikz[baseline=-0.6ex]\pic[scale=0.68, transform shape]{resistor={bands={#1}, lead=0.30}};}
+\newcommand\fieldlabel[1]{{\color{muted}#1}}
+\newcommand\ans[3][26mm]{\mbox{\fieldlabel{#2}\hspace{0.45em}\svar[#1]{#3}}}
+
+\begin{document}
+% =====================================================================================  PAGE 1
+\thispagestyle{plain.scrheadings}
+\begingroup
+\noindent{\fsSemi\footnotesize\color{accent}\addfontfeatures{LetterSpace=12}FYSIK 1\hspace{0.5em}·\hspace{0.5em}ELLÄRA\hspace{0.5em}·\hspace{0.5em}LABORATION}\hfill{\footnotesize\color{muted}Version 2\hspace{0.4em}·\hspace{0.4em}november 2026}\par
+\vspace{1.2mm}
+\noindent{\fsBold\fontsize{27}{31}\selectfont\color{navy}Resistorer och Ohms lag}\par
+\vspace{0.8mm}
+\noindent{\fsLight\fontsize{13}{16}\selectfont\color{muted}Resistansmätning, serie- och parallellkoppling samt verifiering av Ohms lag}\par
+\vspace{2.2mm}
+\noindent\tikz{\shade[left color=accent, right color=teal, middle color=purple] (0,0) rectangle (\linewidth,1.6pt);}\par
+\vspace{1.0mm}
+\noindent{\footnotesize\color{muted}Inspirerad av professor emeritus \textcolor{ink}{Dag Stranneby}, Örebro universitet\hspace{0.45em}·\hspace{0.45em}Bearbetning, layout och illustrationer: \textcolor{ink}{Gabriel Danho}}\par
+\endgroup
+\vspace{2.5mm}
+\noindent\ans[72mm]{Namn}{}\hfill\ans[24mm]{Klass}{}\hfill\ans[32mm]{Datum}{}
+
+\begin{infobox}
+\boxtitle{Syfte}
+\begin{itemize}
+  \item Att mäta resistans med en digital multimeter och jämföra med motståndens färgkod.
+  \item Att undersöka hur resistanser kombineras vid serie- och parallellkoppling.
+  \item Att verifiera Ohms lag genom att jämföra uppmätt och beräknad ström.
+\end{itemize}
+\vspace{2pt}{\color{accentdark}Läs förberedelsen om multimetern på sidan~\pageref{sec:forberedelse} innan du börjar.}
+\end{infobox}
+
+\section*{Utrustning}
+\noindent\includegraphics[width=\linewidth]{fig-equipment}
+\vspace{1mm}
+
+\begin{tcbraster}[raster columns=2, raster equal height, raster column skip=4mm, raster before skip=4pt]
+\begin{infobox}
+\boxtitle{Ohms lag}
+\begin{tikzpicture}[lab]
+  \node[font=\fontsize{21}{23}\selectfont, text=navy, inner sep=0, anchor=west] (f) at (0,0) {\(U = R \cdot I\)};
+  \begin{scope}[shift={(2.78,-0.60)}, scale=0.58]
+    \fill[white] (0,0) -- (2.2,0) -- (1.1,1.9) -- cycle;
+    \draw[accent, line width=0.9pt, line join=round] (0,0) -- (2.2,0) -- (1.1,1.9) -- cycle;
+    \draw[accent, line width=0.7pt] (0.43,0.74) -- (1.77,0.74) (1.1,0) -- (1.1,0.74);
+    \node[text=navy] at (1.1,1.1) {\(U\)};
+    \node[text=navy] at (0.68,0.34) {\(R\)};
+    \node[text=navy] at (1.52,0.34) {\(I\)};
+  \end{scope}
+  \node[anchor=west, inner sep=0, font=\small] at (4.45,0)
+    {\begin{tabular}{@{}l@{\hspace{0.5em}}l@{}}\(U\) & spänning (V)\\ \(R\) & resistans (Ω)\\ \(I\) & ström (A)\end{tabular}};
+\end{tikzpicture}\par\vspace{2pt}
+{\footnotesize\color{muted}På engelska skrivs lagen \(V = IR\). Den är uppkallad efter den tyske fysikern Georg Simon Ohm (1789–1854).}
+\end{infobox}
+\begin{warnbox}
+\boxtitle{\warnicon\hspace{0.4em}Säkerhet och god laborationssed}
+\begin{itemize}
+  \item Mät resistans bara i en spänningslös krets.
+  \item Lysdioden ska alltid ha ett förkopplingsmotstånd – aldrig direkt på \qty{9}{\volt}.
+  \item Vid strömmätning sitter multimetern i serie, aldrig direkt över spänningskällan.
+  \item Stäng av aggregatet innan du kopplar om.
+\end{itemize}
+\end{warnbox}
+\end{tcbraster}
+
+% =====================================================================================  PAGE 2
+\newpage
+\section{Mätning av resistans}
+Mät resistansen hos de fyra motstånden med multimetern. Ställ vridomkopplaren på Ω, sätt den röda sladden i uttaget V\,Ω och den svarta i COM. Håll mätspetsarna mot motståndets ben (figur~\ref{fig:measure}) och jämför det uppmätta värdet med det nominella värde som färgkoden anger.
+
+\begin{center}
+\begin{tblr}{
+  colspec={Q[l,m,wd=19mm] Q[c,m,wd=30mm] Q[c,m,wd=27mm] Q[c,m,wd=38mm] Q[c,m,wd=30mm]},
+  row{1}={font=\fsSemi\footnotesize, fg=navy, bg=soft, abovesep=3.5pt, belowsep=3.5pt},
+  rows={abovesep=2.6pt, belowsep=2.6pt},
+  cell{2-Z}{1}={font=\fsSemi},
+  hline{1,Z}={0.6pt, rule}, hline{2-5}={0.4pt, rule},
+}
+Motstånd & Färgkod & Nominellt värde & Uppmätt värde & Avvikelse \\
+\(R_1\) & \resicon{band-red,band-red,band-brown,band-gold} & \qty{220}{\ohm} & \svar{Ω} & \svar[17mm]{\%} \\
+\(R_2\) & \resicon{band-orange,band-orange,band-brown,band-gold} & \qty{330}{\ohm} & \svar{Ω} & \svar[17mm]{\%} \\
+\(R_3\) & \resicon{band-yellow,band-violet,band-brown,band-gold} & \qty{470}{\ohm} & \svar{Ω} & \svar[17mm]{\%} \\
+\(R_4\) & \resicon{band-yellow,band-violet,band-brown,band-gold} & \qty{470}{\ohm} & \svar{Ω} & \svar[17mm]{\%} \\
+\end{tblr}
+\end{center}
+\vspace{-4pt}
+{\footnotesize\color{muted}\centering Avvikelse \(= \dfrac{\text{uppmätt} - \text{nominellt}}{\text{nominellt}} \cdot \qty{100}{\percent}\).\quad Det guldfärgade bandet anger toleransen \(\pm\)\qty{5}{\percent}.\par}
+
+\fig[0.56\linewidth]{fig-measure-r}{Resistansmätning: multimetern i läge Ω, röd sladd i uttaget V\,Ω och svart sladd i COM.\label{fig:measure}}
+
+\subsection*{Amperemeter och voltmeter}
+Multimetern kan också mäta ström (amperemeter) och spänning (voltmeter). För att mätinstrumentet inte ska påverka kretsen är det uppbyggt på olika sätt i de två fallen (figur~\ref{fig:internal}).
+
+\fig[0.88\linewidth]{fig-meters-internal}{Principskiss för ett analogt instrument. Inuti sitter ett känsligt visarinstrument G (galvanometer).
+a)~Amperemeter med en liten shuntresistans \(R_{\mathrm{sh}}\). b)~Voltmeter med en stor seriekopplad resistans \(R_{\mathrm{s}}\).\label{fig:internal}}
+
+\begin{infobox}
+\textbf{\color{accentdark}OBS!} En \textbf{amperemeter} har mycket \textbf{låg} inre resistans och kopplas i \textbf{serie} med komponenten.\\
+\textbf{\color{accentdark}OBS!} En \textbf{voltmeter} har mycket \textbf{hög} inre resistans och kopplas \textbf{parallellt} med komponenten.
+\end{infobox}
+
+% =====================================================================================  PAGE 3
+\newpage
+\section{Seriekoppling av motstånd}
+Seriekoppla två av motstånden och den röda lysdioden på kopplingsdäcket – du bestämmer själv vilka två motstånd (figur~\ref{fig:seriesschem} och~\ref{fig:seriesbb}).
+
+\fig[0.70\linewidth]{fig-series-schem}{a) Två seriekopplade motstånd kan ersättas av en resistans \(R_{\text{serie}}\). b)~Kretsen som du kopplar upp.\label{fig:seriesschem}}
+
+\begin{formula}
+Vid seriekoppling adderas resistanserna:\qquad \(R_{\text{serie}} = R_A + R_B\)
+\end{formula}
+
+\begin{enumerate}
+  \item Mät resistansen över de två motstånden (inte över lysdioden) med multimetern, utan att spänningsaggregatet är anslutet.
+  \item Beräkna \(R_{\text{serie}}\) med formeln och jämför med mätningen.
+  \item Anslut \qty{9}{\volt}. Lysdioden ska lysa – gör den inte det sitter den troligen åt fel håll.
+\end{enumerate}
+\vspace{1.5mm}
+\noindent\hspace*{1.5em}\ans{\(R_{\text{serie}}\), uppmätt}{Ω}\hfill\ans{\(R_{\text{serie}}\), beräknad}{Ω}\hspace*{1.5em}
+
+\fig[0.60\linewidth]{fig-series-bb}{Kopplingsdäck: \(R_A\) och \(R_B\) i serie med lysdioden. De markerade kolumnerna är elektriskt ihopkopplade.\label{fig:seriesbb}}
+
+Spänningen delas mellan motstånden. Summan av delspänningarna är lika med källans spänning:
+\begin{formula}
+\(U_{\text{batteri}} = U_{R_1} + U_{R_2}\)\qquad\qquad{\color{muted}Exempel:}\quad \qty{9.0}{\volt} = \qty{4.50}{\volt} + \qty{4.50}{\volt}
+\end{formula}
+
+\fig[0.50\linewidth]{fig-series-example}{Exempel med två lika motstånd. Strömmen är densamma i hela kretsen:
+\(I = U/R_{\text{serie}} = \qty{9.0}{\volt}/\qty{20.0}{\ohm} = \qty{0.45}{\ampere}\).\label{fig:seriesex}}
+
+% =====================================================================================  PAGE 4
+\newpage
+\section{Parallellkoppling av motstånd}
+Parallellkoppla två av motstånden på kopplingsdäcket – du bestämmer själv vilka två (figur~\ref{fig:parschem} och~\ref{fig:parbb}).
+
+\fig[0.62\linewidth]{fig-parallel-schem}{Två parallellkopplade motstånd och formeln för deras sammanlagda resistans.\label{fig:parschem}}
+
+\begin{enumerate}
+  \item Mät resistansen hos parallellkopplingen med multimetern, utan att spänningsaggregatet är anslutet.
+  \item Beräkna \(R_{\text{parallell}}\) med formeln och jämför med mätningen.
+\end{enumerate}
+\vspace{1.5mm}
+\noindent\hspace*{1.5em}\ans{\(R_{\text{parallell}}\), uppmätt}{Ω}\hfill\ans{\(R_{\text{parallell}}\), beräknad}{Ω}\hspace*{1.5em}
+
+\fig[0.62\linewidth]{fig-parallel-bb}{Kopplingsdäck: båda motstånden sitter mellan samma två kolumner och är därför parallellkopplade.\label{fig:parbb}}
+
+\begin{tipbox}
+\textbf{\color{teal}Tips.} Vill du även mäta spänningarna med \qty{9}{\volt} anslutet? Använd då de två \qty{470}{\ohm}-motstånden
+(\(P = U^2/R \approx \qty{0.17}{\watt}\) per motstånd). Med \qty{220}{\ohm} blir effekten \(\approx \qty{0.37}{\watt}\), vilket är för mycket för ett vanligt \qty{0.25}{\watt}-motstånd.
+\end{tipbox}
+
+Över parallella grenar är spänningen densamma:
+\begin{formula}
+\(U_{\text{batteri}} = U_{R_1} = U_{R_2}\)\qquad\qquad{\color{muted}Exempel:}\quad \qty{9.0}{\volt} = \qty{9.0}{\volt} = \qty{9.0}{\volt}
+\end{formula}
+
+\fig[0.62\linewidth]{fig-parallel-example}{Exempel med två lika motstånd. Strömmen delar upp sig, \(I = I_1 + I_2 = \qty{0.90}{\ampere} + \qty{0.90}{\ampere} = \qty{1.80}{\ampere}\),
+medan spänningen över varje gren är \qty{9.00}{\volt}.\label{fig:parex}}
+
+% =====================================================================================  PAGE 5
+\newpage
+\section{Verifiering av Ohms lag}
+Ohms lag beskriver hur stor strömmen \(I\) genom en resistans \(R\) blir när spänningen \(U\) över resistansen är känd.
+\(U\) och \(I\) är direkt proportionella, och resistansen \(R\) är proportionalitetskonstanten:
+\begin{formula}
+\(U = R \cdot I \qquad\Longleftrightarrow\qquad I = \dfrac{U}{R}\)
+\end{formula}
+\(U\) är den \textbf{oberoende variabeln} (den vi ställer in) och \(I\) är den \textbf{beroende variabeln} (den vi mäter).
+
+\fig[0.52\linewidth]{fig-iu-graph}{\(I\)–\(U\)-graf (principskiss). För resistorn är grafen en rät linje genom origo med lutningen \(\Delta I/\Delta U = 1/R\).
+Lysdioden leder nästan ingen ström under ca \qty{1.7}{\volt} och följer därför inte Ohms lag.\label{fig:iu}}
+
+Koppla upp spänningsaggregatet med \(U = \qty{9}{\volt}\), multimetern som amperemeter och två motstånd i serie (välj själv) enligt figur~\ref{fig:setup}.
+
+\fig[0.60\linewidth]{fig-ohm-setup}{Uppkoppling för strömmätning. Exempel: med \(R_A = \qty{220}{\ohm}\) och \(R_B = \qty{470}{\ohm}\) blir
+\(I = \qty{9}{\volt}/\qty{690}{\ohm} \approx \qty{13}{\milli\ampere}\).\label{fig:setup}}
+
+\begin{warnbox}
+\boxtitle{\warnicon\hspace{0.4em}OBS! Strömmätning}
+Multimetern får \textbf{aldrig} kopplas direkt över spänningskällan när den mäter ström. Den ska alltid sitta i \textbf{serie} med ett motstånd som begränsar strömmen.
+Flytta tillbaka den röda sladden till uttaget V\,Ω när du är klar.
+\end{warnbox}
+
+Beräkna med hjälp av Ohms lag vilken ström det bör bli, och jämför med mätningen.\par
+\vspace{1.5mm}
+\noindent\hspace*{1.5em}\ans[52mm]{\(I = \dfrac{U}{R_A + R_B} =\)}{}\par
+\vspace{2.5mm}
+\noindent\hspace*{1.5em}\ans{\(I\), uppmätt}{mA}\hfill\ans{\(I\), beräknad}{mA}\hspace*{1.5em}
+
+% =====================================================================================  PAGE 6
+\newpage
+\section{Fördjupning: mätning och beräkning}
+Varför får vi inte exakt samma värde när vi mäter som när vi räknar? Formlerna beskriver idealiserade komponenter, medan verkliga ledare och motstånd har egenskaper som formlerna inte tar hänsyn till.
+Resistansen hos en tråd beror på materialet (resistiviteten \(\rho\)), längden \(L\) och tvärsnittsarean \(A\):
+\begin{formula}
+\(R = \rho \cdot \dfrac{L}{A}\)\qquad{\color{muted}\small En längre och tunnare tråd har större resistans.}
+\end{formula}
+
+\fig[0.68\linewidth]{fig-wire}{Två trådar av samma material men med olika form. Värdena kommer från PhET-simuleringen
+\emph{Resistance in a Wire} (University of Colorado Boulder), där du kan undersöka sambandet själv.\label{fig:wire}}
+
+\textbf{Uppgift.} Kontrollera resistansen för tråd A och tråd B genom att räkna själv.\par
+\vspace{1.5mm}
+\noindent\hspace*{1.5em}\ans{Tråd A: \(R =\)}{Ω}\hfill\ans{Tråd B: \(R =\)}{Ω}\hspace*{1.5em}
+
+\begin{discbox}
+\boxtitle{Diskussion}
+\begin{enumerate}[label={\fsSemi\color{purple}\arabic*.}]
+  \item Jämför uppmätta och beräknade värden i uppgift 1–4. Hur stor är den relativa avvikelsen? Ligger den inom motståndens tolerans (\(\pm\)\qty{5}{\percent})?
+  \item Vilka felkällor kan förklara skillnaderna? Tänk på motståndens tolerans, kontakterna i kopplingsdäcket och sladdarna samt multimeterns noggrannhet.
+  \item Varför följer lysdioden inte Ohms lag? Använd \(I\)–\(U\)-grafen i figur~\ref{fig:iu}.
+  \item Varför ska en amperemeter ha låg och en voltmeter hög inre resistans?
+\end{enumerate}
+\end{discbox}
+
+\noindent{\fsSemi\color{navy}Svar och anteckningar}\par\vspace{1mm}
+\noindent\begin{tikzpicture}
+  \foreach \k in {0,...,6} \draw[rule, line width=0.5pt] (0.3pt,-\k*0.82) -- (\linewidth-0.3pt,-\k*0.82);
+\end{tikzpicture}
+
+% =====================================================================================  PAGE 7
+\newpage
+\section*{Förberedelse: så använder du multimetern}\label{sec:forberedelse}
+Läs igenom den här sidan före laborationen. Samma instrument mäter spänning, ström och resistans – det som avgör är läget på vridomkopplaren och vilka uttag sladdarna sitter i.
+
+\fig[0.96\linewidth]{fig-dmm-functions}{Multimeterns delar och funktioner.\label{fig:dmm}}
+
+\vspace{1mm}
+\noindent\begin{minipage}[t]{0.47\linewidth}
+\subsection*{Strömmätning: i serie}
+\vspace{-2mm}
+\fig[\linewidth]{fig-ammeter-series}{Amperemetern kopplas i \textbf{serie}, så att all ström går genom den. Läge A\dcsym\ och röd sladd i uttaget 10A, eftersom strömmen \(I = U/R = \qty{1.5}{\volt}/\qty{1}{\ohm} = \qty{1.5}{\ampere}\) är större än vad mA-uttaget tål.\label{fig:amm}}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\linewidth}
+\subsection*{Spänningsmätning: parallellt}
+\vspace{-2mm}
+\fig[\linewidth]{fig-voltmeter-parallel}{Voltmetern kopplas \textbf{parallellt} över komponenten. Läge V\dcsym\ och röd sladd i uttaget V\,Ω. I en krets med ett batteri och en lampa mäts \qty{1.5}{\volt} både över batteriet och över lampan.\label{fig:volt}}
+\end{minipage}
+
+\end{document}
